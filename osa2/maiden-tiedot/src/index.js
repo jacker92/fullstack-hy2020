@@ -11,7 +11,7 @@ const App = () => {
     setSearchTerm(e.target.value);
   }
 
-  const getData = () => {
+  const getCountryData = () => {
     axios
       .get('https://restcountries.eu/rest/v2/all')
       .then(response => {
@@ -19,7 +19,7 @@ const App = () => {
       })
   }
 
-  useEffect(getData, []);
+  useEffect(getCountryData, []);
 
   return (
     <div>
@@ -72,15 +72,34 @@ const Country = ({ country }) => {
         {country.languages.map(x => <li key={x.name}>{x.name}</li>)}
       </ul>
       <img src={country.flag} />
-      <WeatherData country={country.name}/>
+      <WeatherData country={country} />
     </div>
   )
 }
 
-const WeatherData = ({country}) => {
-  return(
+const WeatherData = ({ country }) => {
+
+  const [currentWeather, setCurrentWeather] = useState();
+
+  const getWeatherData = () => {
+    if (currentWeather) {
+      return;
+    }
+    const url = 'http://api.weatherstack.com/current?access_key=' + process.env.REACT_APP_API_KEY + '&query=' + country.capital;
+    axios
+      .get(url)
+      .then(response => {
+        console.log(response.data);
+        setCurrentWeather(response.data)
+      })
+  }
+  useEffect(getWeatherData, [])
+
+  return (
     <div>
-      Weather data here
+      <h2>Weather in {country.capital}</h2>
+      <p>Temperature: {currentWeather?.current?.temperature} celcius</p>
+      <p>Wind: {currentWeather?.current?.wind_speed} mph direction {currentWeather?.current?.wind_dir}</p>
     </div>
   )
 }
