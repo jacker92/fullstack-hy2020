@@ -14,7 +14,7 @@ const App = () => {
         setNeutral={() => setNeutral(neutral + 1)}
         setBad={() => setBad(bad + 1)}
       />
-      <FeedbackStatistics
+      <Statistics
         good={good}
         neutral={neutral}
         bad={bad}
@@ -42,10 +42,10 @@ const ResponseButton = ({ name, onClick }) => {
   )
 }
 
-const FeedbackStatistics = ({ good, neutral, bad }) => {
+const Statistics = ({ good, neutral, bad }) => {
   let total = good + neutral + bad;
-  let average = (good-bad)/total || 0
-  let positiveValues = 100 *((total-(neutral+bad))/total) || 0;
+  let average = (good - bad) / total || 0
+  let positiveValues = 100 * ((total - (neutral + bad)) / total) || 0;
 
   return (
     <div>
