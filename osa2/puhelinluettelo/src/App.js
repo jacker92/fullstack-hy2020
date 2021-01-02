@@ -40,9 +40,11 @@ const App = () => {
 
     return (
         <div>
-            <h1>Phonebook</h1>
+            <h2>Phonebook</h2>
             <PhoneBookFilter handleFilterChange={handleFilterChange} />
+            <h2>Add new</h2>
             <PhoneBookForm addName={addName} handleNameChange={handleNameChange} handlePhoneChange={handlePhoneChange} />
+            <h3>Numbers</h3>
             <PersonDisplay persons={persons} filterValue={newFilter} />
         </div>
     )
@@ -61,7 +63,6 @@ const PhoneBookFilter = ({ handleFilterChange }) => {
 const PhoneBookForm = ({ addName, handleNameChange, handlePhoneChange }) => {
     return (
         <>
-            <h2>Add new</h2>
             <form onSubmit={addName}>
                 <div>
                     name: <input onChange={handleNameChange} />
@@ -80,7 +81,6 @@ const PhoneBookForm = ({ addName, handleNameChange, handlePhoneChange }) => {
 const PersonDisplay = ({ persons, filterValue }) => {
     return (
         <div>
-            <h2>Numbers</h2>
             {persons.map(x => (
                 x.name.toUpperCase().indexOf(filterValue.toUpperCase()) !== -1) ?
                 <Person key={x.name} name={x.name} number={x.number} /> :
