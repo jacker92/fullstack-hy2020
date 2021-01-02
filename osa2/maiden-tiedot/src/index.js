@@ -24,24 +24,26 @@ const App = () => {
   return (
     <div>
       <SearchArea onChange={onSearchTermChange} />
-      <SearchResultsDisplay countries={countries} searchTerm={searchTerm} />
+      <SearchResultsDisplay countries={countries} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
     </div>
   )
 }
 
-const SearchResultsDisplay = ({ countries, searchTerm }) => {
-  let filteredCountries = countries.filter
+const SearchResultsDisplay = ({ countries, searchTerm, setSearchTerm }) => {
+  const filteredCountries = countries.filter
     (x => x.name.toUpperCase().indexOf(searchTerm.toUpperCase()) !== -1);
 
   if (filteredCountries.length === 1) {
     return (
-      <Country country={filteredCountries[0]} />
+      <Country key={filteredCountries[0].name} country={filteredCountries[0]} />
     )
   }
   else if (filteredCountries.length > 0 && filteredCountries.length <= 10) {
     return (
       <div>
-        {filteredCountries.map(x => <p>{x.name}</p>)}
+        {filteredCountries.map(x => (
+          <MinimizedCountry key={x.name} country={x} setSearchTerm={setSearchTerm} />
+        ))}
       </div>
     )
   }
@@ -50,19 +52,26 @@ const SearchResultsDisplay = ({ countries, searchTerm }) => {
   )
 }
 
+const MinimizedCountry = ({ country, setSearchTerm }) => {
+  return (
+    <div>
+      <p>{country.name}</p>
+      <button onClick={() => setSearchTerm(country.name)}>show</button>
+    </div>
+  )
+}
+
 const Country = ({ country }) => {
-  console.log(country);
   return (
     <div>
       <h2>{country.name}</h2>
       <p>capital {country.capital}</p>
       <p>population {country.population}</p>
       <h3>Languages</h3>
-
       <ul>
-      {country.languages.map(x => <li>{x.name}</li>)}
+        {country.languages.map(x => <li key={x.name}>{x.name}</li>)}
       </ul>
-      <img src={country.flag}/>
+      <img src={country.flag} />
     </div>
   )
 }
