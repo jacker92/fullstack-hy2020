@@ -2,25 +2,29 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 const App = () => {
-  const course = 'Half Stack application development'
-  const part1 = 'Fundamentals of React'
-  const exercises1 = 10
-  const part2 = 'Using props to pass data'
-  const exercises2 = 7
-  const part3 = 'State of a component'
-  const exercises3 = 14
-
-  const content = [
-    { "part": part1, "count": exercises1 },
-    { "part": part2, "count": exercises2 },
-    { "part": part3, "count": exercises3 },
-  ]
+  const course = {
+    name: 'Half Stack application development',
+    parts: [
+      {
+        name: 'Fundamentals of React',
+        exercises: 10
+      },
+      {
+        name: 'Using props to pass data',
+        exercises: 7
+      },
+      {
+        name: 'State of a component',
+        exercises: 14
+      }
+    ]
+  }
 
   return (
     <div>
       <Header course={course} />
-      <Content content={content} />
-      <Total count={exercises1 + exercises2 + exercises3} />
+      <Content parts={course} />
+      <Total parts={course} />
     </div>
   )
 }
@@ -28,15 +32,16 @@ const App = () => {
 const Header = (props) => {
   return (
     <h1>
-      {props.course}
+      {props.course.name}
     </h1>
   )
 }
 
 const Content = (props) => {
+  console.log(props);
   return (
     <div>
-      {props.content.map(x => <Part description={x.part} exerciseCount={x.count} />)}
+      {props.parts.parts.map(x => <Part description={x.name} exerciseCount={x.exercises} />)}
     </div>
   )
 }
@@ -48,9 +53,11 @@ const Part = (props) => {
 }
 
 const Total = (props) => {
+  const sum = props.parts.parts.reduce((a, b) => a + (b.exercises || 0), 0);
   return (
     <div>
-      <p>Number of exercises {props.count}</p>
+      <p>Number of exercises {sum}
+      </p>
     </div>
   )
 }
