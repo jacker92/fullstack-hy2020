@@ -43,12 +43,19 @@ const ResponseButton = ({ name, onClick }) => {
 }
 
 const FeedbackStatistics = ({ good, neutral, bad }) => {
+  let total = good + neutral + bad;
+  let average = (good-bad)/total || 0
+  let positiveValues = 100 *((total-(neutral+bad))/total) || 0;
+
   return (
     <div>
       <h1>Statistics</h1>
       <p>Good {good}</p>
       <p>Neutral {neutral}</p>
       <p>Bad {bad}</p>
+      <p>All {total}</p>
+      <p>Average {average}</p>
+      <p>Positive {positiveValues}%</p>
     </div>
   )
 }
