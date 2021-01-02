@@ -27,18 +27,24 @@ const GiveFeedback = ({ setGood, setNeutral, setBad }) => {
   return (
     <div>
       <h1>Give feedback</h1>
-      <ResponseButton name="good" onClick={setGood} />
-      <ResponseButton name="neutral" onClick={setNeutral} />
-      <ResponseButton name="bad" onClick={setBad} />
+      <Button name="good" onClick={setGood} />
+      <Button name="neutral" onClick={setNeutral} />
+      <Button name="bad" onClick={setBad} />
     </div>
   )
 }
 
-const ResponseButton = ({ name, onClick }) => {
+const Button = ({ name, onClick }) => {
   return (
     <div className="responseButton">
       <button onClick={onClick}>{name}</button>
     </div>
+  )
+}
+
+const StatisticLine = ({ text, value }) => {
+  return (
+    <p>{text} {value}</p>
   )
 }
 
@@ -51,21 +57,21 @@ const Statistics = ({ good, neutral, bad }) => {
     return (
       <div>
         <h1>Statistics</h1>
-        <p>Good {good}</p>
-        <p>Neutral {neutral}</p>
-        <p>Bad {bad}</p>
-        <p>All {total}</p>
-        <p>Average {average}</p>
-        <p>Positive {positiveValues}%</p>
+        <StatisticLine text="Good" value={good} />
+        <StatisticLine text="Neutral" value={neutral} />
+        <StatisticLine text="Bad" value={bad} />
+        <StatisticLine text="All" value={total} />
+        <StatisticLine text="Average" value={average} />
+        <StatisticLine text="Positive" value={positiveValues} />
       </div>
     )
   }
 
   return (
-    <div>    
+    <div>
       <h1>Statistics</h1>
       <p>No feedback given.</p>
-      </div>
+    </div>
   )
 }
 
