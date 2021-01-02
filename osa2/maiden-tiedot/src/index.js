@@ -72,6 +72,15 @@ const Country = ({ country }) => {
         {country.languages.map(x => <li key={x.name}>{x.name}</li>)}
       </ul>
       <img src={country.flag} />
+      <WeatherData country={country.name}/>
+    </div>
+  )
+}
+
+const WeatherData = ({country}) => {
+  return(
+    <div>
+      Weather data here
     </div>
   )
 }
