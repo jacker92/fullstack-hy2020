@@ -29,31 +29,30 @@ const App = () => {
   )
 }
 
-const Header = (props) => {
+const Header = ({course}) => {
   return (
     <h1>
-      {props.course.name}
+      {course.name}
     </h1>
   )
 }
 
-const Content = (props) => {
-  console.log(props);
+const Content = ({parts}) => {
   return (
     <div>
-      {props.parts.parts.map(x => <Part description={x.name} exerciseCount={x.exercises} />)}
+      {parts.parts.map(x => <Part description={x.name} exerciseCount={x.exercises} />)}
     </div>
   )
 }
 
-const Part = (props) => {
+const Part = ({description, exerciseCount}) => {
   return (
-    <p>{props.description} {props.exerciseCount}</p>
+    <p>{description} {exerciseCount}</p>
   )
 }
 
-const Total = (props) => {
-  const sum = props.parts.parts.reduce((a, b) => a + (b.exercises || 0), 0);
+const Total = ({parts}) => {
+  const sum = parts.parts.reduce((a, b) => a + (b.exercises || 0), 0);
   return (
     <div>
       <p>Number of exercises {sum}
