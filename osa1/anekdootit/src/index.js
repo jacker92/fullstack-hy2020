@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
-const App = (props) => {
+const App = ({ anecdotes }) => {
 
   const generateRandomIndex = () => {
     return Math.floor(Math.random() * anecdotes.length)
@@ -9,6 +9,12 @@ const App = (props) => {
 
   const [points, setPoints] = useState(new Array(anecdotes.length).fill(0));
   const [selected, setSelected] = useState(generateRandomIndex());
+
+  const getMostVotedAnekdoteIndex = () => {
+    console.log(points);
+    let index = points.indexOf(Math.max(...points));
+    return index;
+  }
 
   const addVote = () => {
     const copy = [...points]
@@ -18,10 +24,24 @@ const App = (props) => {
 
   return (
     <div>
-      {props.anecdotes[selected]}
+      {anecdotes[selected]}
       <br></br>
       <button onClick={() => setSelected(generateRandomIndex())}>Next anecdote</button>
       <button onClick={() => addVote()}>Vote</button>
+      <MostVotedAnekdote
+        anecdote={anecdotes[getMostVotedAnekdoteIndex()]}
+        voteCount={points[getMostVotedAnekdoteIndex()]}
+      />
+    </div>
+  )
+}
+
+const MostVotedAnekdote = ({ anecdote, voteCount }) => {
+  return (
+    <div>
+      <h1>Anecdote with most votes</h1>
+      <p>{anecdote}</p>
+      <p>has {voteCount} votes</p>
     </div>
   )
 }
