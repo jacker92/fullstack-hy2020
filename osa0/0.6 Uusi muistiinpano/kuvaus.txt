@@ -1,0 +1,6 @@
+selain->palvelin: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+estetään lomakkeen oletusarvoinen toiminta
+lisätään lomakkeen kentän tiedot notes-muuttujaan tämän hetken päivämäärän kanssa
+piirretään muistiinpanot uudelleen
+lähetetään uusi muistiinpano palvelimelle
+palvelin->selain: 201 created
