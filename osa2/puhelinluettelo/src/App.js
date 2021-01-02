@@ -5,6 +5,7 @@ const App = () => {
         { name: 'Arto Hellas' }
     ])
     const [newName, setNewName] = useState('')
+    const [newPhone, setNewPhone] = useState('')
 
     const addName = (e) => {
         e.preventDefault();
@@ -14,7 +15,8 @@ const App = () => {
         } else {
             setPersons(persons.concat(
                 {
-                    name: newName
+                    name: newName,
+                    phone: newPhone
                 }));
         }
 
@@ -24,22 +26,29 @@ const App = () => {
         setNewName(e.target.value);
     }
 
+    const handlePhoneChange = (e) => {
+        setNewPhone(e.target.value);
+    }
+
     return (
         <div>
-            <PhonebookForm addName={addName} handleNameChange={handleNameChange} />
+            <PhonebookForm addName={addName} handleNameChange={handleNameChange} handlePhoneChange={handlePhoneChange} />
             <PersonDisplay persons={persons} />
         </div>
     )
 
 }
 
-const PhonebookForm = ({ addName, handleNameChange }) => {
+const PhonebookForm = ({ addName, handleNameChange, handlePhoneChange }) => {
     return (
         <>
             <h2>Phonebook</h2>
             <form onSubmit={addName}>
                 <div>
                     name: <input onChange={handleNameChange} />
+                </div>
+                <div>
+                    phone: <input onChange={handlePhoneChange} />
                 </div>
                 <div>
                     <button type="submit">add</button>
@@ -53,14 +62,14 @@ const PersonDisplay = ({ persons }) => {
     return (
         <div>
             <h2>Numbers</h2>
-            {persons.map(x => <Person key={x.name} name={x.name} />)}
+            {persons.map(x => <Person key={x.name} name={x.name} phone={x.phone}/>)}
         </div>
 
     )
 }
-const Person = ({ name }) => {
+const Person = ({ name, phone }) => {
     return (
-        <p>{name}</p>
+        <p>{name} {phone}</p>
     )
 }
 
