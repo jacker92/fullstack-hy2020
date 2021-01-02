@@ -2,10 +2,14 @@ import React, { useState } from 'react'
 
 const App = () => {
     const [persons, setPersons] = useState([
-        { name: 'Arto Hellas' }
+        { name: 'Arto Hellas', number: '040-123456' },
+        { name: 'Ada Lovelace', number: '39-44-5323523' },
+        { name: 'Dan Abramov', number: '12-43-234345' },
+        { name: 'Mary Poppendieck', number: '39-23-6423122' }
     ])
     const [newName, setNewName] = useState('')
     const [newPhone, setNewPhone] = useState('')
+    const [newFilter, setFilterValue] = useState('')
 
     const addName = (e) => {
         e.preventDefault();
@@ -16,7 +20,7 @@ const App = () => {
             setPersons(persons.concat(
                 {
                     name: newName,
-                    phone: newPhone
+                    number: newPhone
                 }));
         }
 
@@ -30,19 +34,34 @@ const App = () => {
         setNewPhone(e.target.value);
     }
 
+    const handleFilterChange = (e) => {
+        setFilterValue(e.target.value);
+    }
+
     return (
         <div>
-            <PhonebookForm addName={addName} handleNameChange={handleNameChange} handlePhoneChange={handlePhoneChange} />
-            <PersonDisplay persons={persons} />
+            <h1>Phonebook</h1>
+            <PhoneBookFilter handleFilterChange={handleFilterChange} />
+            <PhoneBookForm addName={addName} handleNameChange={handleNameChange} handlePhoneChange={handlePhoneChange} />
+            <PersonDisplay persons={persons} filterValue={newFilter} />
         </div>
     )
 
 }
 
-const PhonebookForm = ({ addName, handleNameChange, handlePhoneChange }) => {
+const PhoneBookFilter = ({ handleFilterChange }) => {
+    return (
+        <div>
+            Filter shown with
+            <input type="text" onChange={handleFilterChange} />
+        </div>
+    )
+}
+
+const PhoneBookForm = ({ addName, handleNameChange, handlePhoneChange }) => {
     return (
         <>
-            <h2>Phonebook</h2>
+            <h2>Add new</h2>
             <form onSubmit={addName}>
                 <div>
                     name: <input onChange={handleNameChange} />
@@ -58,18 +77,21 @@ const PhonebookForm = ({ addName, handleNameChange, handlePhoneChange }) => {
     )
 }
 
-const PersonDisplay = ({ persons }) => {
+const PersonDisplay = ({ persons, filterValue }) => {
     return (
         <div>
             <h2>Numbers</h2>
-            {persons.map(x => <Person key={x.name} name={x.name} phone={x.phone}/>)}
+            {persons.map(x => (
+                x.name.toUpperCase().indexOf(filterValue.toUpperCase()) !== -1) ?
+                <Person key={x.name} name={x.name} number={x.number} /> :
+                ""
+            )}
         </div>
-
     )
 }
-const Person = ({ name, phone }) => {
+const Person = ({ name, number }) => {
     return (
-        <p>{name} {phone}</p>
+        <p>{name} {number}</p>
     )
 }
 
