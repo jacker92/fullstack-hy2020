@@ -47,16 +47,25 @@ const Statistics = ({ good, neutral, bad }) => {
   let average = (good - bad) / total || 0
   let positiveValues = 100 * ((total - (neutral + bad)) / total) || 0;
 
+  if (total > 0) {
+    return (
+      <div>
+        <h1>Statistics</h1>
+        <p>Good {good}</p>
+        <p>Neutral {neutral}</p>
+        <p>Bad {bad}</p>
+        <p>All {total}</p>
+        <p>Average {average}</p>
+        <p>Positive {positiveValues}%</p>
+      </div>
+    )
+  }
+
   return (
-    <div>
+    <div>    
       <h1>Statistics</h1>
-      <p>Good {good}</p>
-      <p>Neutral {neutral}</p>
-      <p>Bad {bad}</p>
-      <p>All {total}</p>
-      <p>Average {average}</p>
-      <p>Positive {positiveValues}%</p>
-    </div>
+      <p>No feedback given.</p>
+      </div>
   )
 }
 
