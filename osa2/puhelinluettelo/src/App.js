@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
+import './app.css'
 
 const App = () => {
     const [persons, setPersons] = useState([])
@@ -7,6 +8,7 @@ const App = () => {
     const [newName, setNewName] = useState('')
     const [newPhone, setNewPhone] = useState('')
     const [newFilter, setFilterValue] = useState('')
+    const [message, setMessage] = useState('')
 
     const getData = () => {
         personService
@@ -22,7 +24,7 @@ const App = () => {
         e.preventDefault();
 
         const duplicate = persons.find(p => p.name === newName);
-        
+
         if (duplicate) {
             updatePerson(duplicate);
             return;
@@ -35,8 +37,13 @@ const App = () => {
 
         personService
             .create(newPerson)
-            .then(response => {
-                setPersons(persons.concat(response));
+            .then(res => {
+                console.log(res)  
+                setPersons(persons.concat(res));
+                setMessage(`Added ${res.name}`)
+                setTimeout(() => {
+                    setMessage(null)
+                }, 5000)
             })
     }
 
@@ -47,14 +54,26 @@ const App = () => {
             return;
         }
 
-        const changedPerson = { ...duplicatePerson, number: newPhone};
+        const changedPerson = { ...duplicatePerson, number: newPhone };
 
-              personService
-              .update(changedPerson.id, changedPerson)
-              .then(res => console.log(res));
+        personService
+            .update(changedPerson.id, changedPerson)
+            .then(res => {
+                console.log(res)  
+                setMessage(`Updated ${changedPerson.name}`)
+                setTimeout(() => {
+                    setMessage(null)
+                }, 5000)
+            })
+            .catch(error => {
+                console.log("In error", error)
+            }
+            );
 
-        const filteredArray = persons.filter(x => x.id !== changedPerson.id);      
-        setPersons(filteredArray.concat(changedPerson));    
+
+
+        const filteredArray = persons.filter(x => x.id !== changedPerson.id);
+        setPersons(filteredArray.concat(changedPerson));
     }
 
     const removePerson = (person) => {
@@ -65,7 +84,13 @@ const App = () => {
         }
 
         personService
-            .remove(person.id);
+            .remove(person.id)
+            .then(res => {
+                setMessage(`Removed ${person.name}`)
+                setTimeout(() => {
+                    setMessage(null)
+                }, 5000)
+            });
 
         setPersons(persons.filter(x => x.id !== person.id));
     }
@@ -85,6 +110,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={message} />
             <PhoneBookFilter handleFilterChange={handleFilterChange} />
             <h2>Add new</h2>
             <PhoneBookForm addPerson={addPerson} handleNameChange={handleNameChange} handlePhoneChange={handlePhoneChange} />
@@ -92,7 +118,19 @@ const App = () => {
             <PersonDisplay persons={persons} filterValue={newFilter} removePerson={removePerson} />
         </div>
     )
+}
 
+const Notification = ({ message, type }) => {
+    if (!message) {
+        return null
+    }
+
+    const className = type === "error" ? "error" : "success";
+    return (
+        <div className={className}>
+            {message}
+        </div>
+    )
 }
 
 const PhoneBookFilter = ({ handleFilterChange }) => {
