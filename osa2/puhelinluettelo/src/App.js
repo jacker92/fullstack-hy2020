@@ -18,7 +18,7 @@ const App = () => {
 
     useEffect(getData, []);
 
-    const addName = (e) => {
+    const addPerson = (e) => {
         e.preventDefault();
 
         if (persons.some(p => p.name === newName)) {
@@ -38,6 +38,22 @@ const App = () => {
             })
     }
 
+    const removePerson = (person) => {
+        const result = window.confirm(`Delete ${person.name}?`);
+
+        if (!result) {
+            return;
+        }
+
+        personService
+            .remove(person.id)
+            .then(response => {
+                console.log(response)
+            })
+
+        setPersons(persons.filter(x => x.id !== person.id));
+    }
+
     const handleNameChange = (e) => {
         setNewName(e.target.value);
     }
@@ -55,9 +71,9 @@ const App = () => {
             <h2>Phonebook</h2>
             <PhoneBookFilter handleFilterChange={handleFilterChange} />
             <h2>Add new</h2>
-            <PhoneBookForm addName={addName} handleNameChange={handleNameChange} handlePhoneChange={handlePhoneChange} />
+            <PhoneBookForm addPerson={addPerson} handleNameChange={handleNameChange} handlePhoneChange={handlePhoneChange} />
             <h3>Numbers</h3>
-            <PersonDisplay persons={persons} filterValue={newFilter} />
+            <PersonDisplay persons={persons} filterValue={newFilter} removePerson={removePerson} />
         </div>
     )
 
@@ -72,10 +88,10 @@ const PhoneBookFilter = ({ handleFilterChange }) => {
     )
 }
 
-const PhoneBookForm = ({ addName, handleNameChange, handlePhoneChange }) => {
+const PhoneBookForm = ({ addPerson, handleNameChange, handlePhoneChange }) => {
     return (
         <>
-            <form onSubmit={addName}>
+            <form onSubmit={addPerson}>
                 <div>
                     name: <input onChange={handleNameChange} />
                 </div>
@@ -90,20 +106,21 @@ const PhoneBookForm = ({ addName, handleNameChange, handlePhoneChange }) => {
     )
 }
 
-const PersonDisplay = ({ persons, filterValue }) => {
+const PersonDisplay = ({ persons, filterValue, removePerson }) => {
+    const filtered = persons.filter(x => x.name.toUpperCase().indexOf(filterValue.toUpperCase()) !== -1);
     return (
         <div>
-            {persons.map(x => (
-                x.name.toUpperCase().indexOf(filterValue.toUpperCase()) !== -1) ?
-                <Person key={x.name} name={x.name} number={x.number} /> :
-                ""
-            )}
+            {filtered.map(x => (
+                <Person key={x.id} person={x} removePerson={removePerson} />
+            ))}
         </div>
     )
 }
-const Person = ({ name, number }) => {
+const Person = ({ person, removePerson }) => {
     return (
-        <p>{name} {number}</p>
+        <p>{person.name} {person.number}
+            <button onClick={() => removePerson(person)}>remove</button>
+        </p>
     )
 }
 
