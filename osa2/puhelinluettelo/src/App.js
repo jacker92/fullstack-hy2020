@@ -12,7 +12,7 @@ const App = () => {
         personService
             .getAll()
             .then(response => {
-                setPersons(response.data)
+                setPersons(response)
             })
     }
 
@@ -21,21 +21,40 @@ const App = () => {
     const addPerson = (e) => {
         e.preventDefault();
 
-        if (persons.some(p => p.name === newName)) {
-            alert(`${newName} is already added to phonebook`);
+        const duplicate = persons.find(p => p.name === newName);
+        
+        if (duplicate) {
+            updatePerson(duplicate);
             return;
         }
+
         var newPerson = {
             name: newName,
             number: newPhone
         }
-        setPersons(persons.concat(newPerson));
 
         personService
             .create(newPerson)
             .then(response => {
-                console.log(response)
+                setPersons(persons.concat(response));
             })
+    }
+
+    const updatePerson = (duplicatePerson) => {
+        const result = window.confirm(`${newName} is already added to phonebook, replace the 
+                                       old number with a new one?`)
+        if (!result) {
+            return;
+        }
+
+        const changedPerson = { ...duplicatePerson, number: newPhone};
+
+              personService
+              .update(changedPerson.id, changedPerson)
+              .then(res => console.log(res));
+
+        const filteredArray = persons.filter(x => x.id !== changedPerson.id);      
+        setPersons(filteredArray.concat(changedPerson));    
     }
 
     const removePerson = (person) => {
@@ -46,10 +65,7 @@ const App = () => {
         }
 
         personService
-            .remove(person.id)
-            .then(response => {
-                console.log(response)
-            })
+            .remove(person.id);
 
         setPersons(persons.filter(x => x.id !== person.id));
     }
