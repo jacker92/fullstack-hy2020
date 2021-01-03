@@ -47,6 +47,10 @@ const App = () => {
                     setMessage(null)
                 }, 5000)
             })
+            .catch(e => {
+                setMessage(`${e.response.data.error}`)
+                setMessageType("error")
+            })
     }
 
     const updatePerson = (duplicatePerson) => {
