@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
 import './app.css'
@@ -19,16 +20,16 @@ const App = () => {
             })
     }
 
-    useEffect(getData, []);
+    useEffect(getData, [])
 
     const addPerson = (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
-        const duplicate = persons.find(p => p.name === newName);
+        const duplicate = persons.find(p => p.name === newName)
 
         if (duplicate) {
-            updatePerson(duplicate);
-            return;
+            updatePerson(duplicate)
+            return
         }
 
         var newPerson = {
@@ -40,16 +41,16 @@ const App = () => {
             .create(newPerson)
             .then(res => {
                 console.log(res)
-                setPersons(persons.concat(res));
+                setPersons(persons.concat(res))
                 setMessage(`Added ${res.name}`)
-                setMessageType("success")
+                setMessageType('success')
                 setTimeout(() => {
                     setMessage(null)
                 }, 5000)
             })
             .catch(e => {
                 setMessage(`${e.response.data.error}`)
-                setMessageType("error")
+                setMessageType('error')
             })
     }
 
@@ -57,65 +58,65 @@ const App = () => {
         const result = window.confirm(`${newName} is already added to phonebook, replace the 
                                        old number with a new one?`)
         if (!result) {
-            return;
+            return
         }
 
-        const changedPerson = { ...duplicatePerson, number: newPhone };
+        const changedPerson = { ...duplicatePerson, number: newPhone }
 
         personService
             .update(changedPerson.id, changedPerson)
             .then(res => {
                 console.log(res)
                 setMessage(`Updated ${changedPerson.name}`)
-                setMessageType("success")
+                setMessageType('success')
                 setTimeout(() => {
                     setMessage(null)
                 }, 5000)
             })
             .catch(error => {
-                console.log("Error", error)
+                console.log('Error', error)
                 setMessage(`${changedPerson.name} has already been removed from server`)
-                setMessageType("error")
+                setMessageType('error')
                 setTimeout(() => {
                     setMessage(null)
                 }, 5000)
             }
-            );
+            )
 
-        const filteredArray = persons.filter(x => x.id !== changedPerson.id);
-        setPersons(filteredArray.concat(changedPerson));
+        const filteredArray = persons.filter(x => x.id !== changedPerson.id)
+        setPersons(filteredArray.concat(changedPerson))
     }
 
     const removePerson = (person) => {
-        const result = window.confirm(`Delete ${person.name}?`);
+        const result = window.confirm(`Delete ${person.name}?`)
 
         if (!result) {
-            return;
+            return
         }
 
         personService
             .remove(person.id)
-            .then(res => {
+            .then(() => {
                 setMessage(`Removed ${person.name}`)
-                setMessageType("success")
+                setMessageType('success')
                 setTimeout(() => {
                     setMessage(null)
                 }, 5000)
-            });
+            })
 
-        setPersons(persons.filter(x => x.id !== person.id));
+        setPersons(persons.filter(x => x.id !== person.id))
     }
 
     const handleNameChange = (e) => {
-        setNewName(e.target.value);
+        setNewName(e.target.value)
     }
 
     const handlePhoneChange = (e) => {
-        setNewPhone(e.target.value);
+        setNewPhone(e.target.value)
     }
 
     const handleFilterChange = (e) => {
-        setFilterValue(e.target.value);
+        setFilterValue(e.target.value)
     }
 
     return (
@@ -136,7 +137,7 @@ const Notification = ({ message, type }) => {
         return null
     }
 
-    const className = type === "error" ? "error" : "success";
+    const className = type === 'error' ? 'error' : 'success'
     return (
         <div className={className}>
             {message}
@@ -172,7 +173,7 @@ const PhoneBookForm = ({ addPerson, handleNameChange, handlePhoneChange }) => {
 }
 
 const PersonDisplay = ({ persons, filterValue, removePerson }) => {
-    const filtered = persons.filter(x => x.name.toUpperCase().indexOf(filterValue.toUpperCase()) !== -1);
+    const filtered = persons.filter(x => x.name.toUpperCase().indexOf(filterValue.toUpperCase()) !== -1)
     return (
         <div>
             {filtered.map(x => (
