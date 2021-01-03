@@ -9,6 +9,7 @@ const App = () => {
     const [newPhone, setNewPhone] = useState('')
     const [newFilter, setFilterValue] = useState('')
     const [message, setMessage] = useState('')
+    const [messageType, setMessageType] = useState('')
 
     const getData = () => {
         personService
@@ -38,9 +39,10 @@ const App = () => {
         personService
             .create(newPerson)
             .then(res => {
-                console.log(res)  
+                console.log(res)
                 setPersons(persons.concat(res));
                 setMessage(`Added ${res.name}`)
+                setMessageType("success")
                 setTimeout(() => {
                     setMessage(null)
                 }, 5000)
@@ -59,18 +61,22 @@ const App = () => {
         personService
             .update(changedPerson.id, changedPerson)
             .then(res => {
-                console.log(res)  
+                console.log(res)
                 setMessage(`Updated ${changedPerson.name}`)
+                setMessageType("success")
                 setTimeout(() => {
                     setMessage(null)
                 }, 5000)
             })
             .catch(error => {
-                console.log("In error", error)
+                console.log("Error", error)
+                setMessage(`${changedPerson.name} has already been removed from server`)
+                setMessageType("error")
+                setTimeout(() => {
+                    setMessage(null)
+                }, 5000)
             }
             );
-
-
 
         const filteredArray = persons.filter(x => x.id !== changedPerson.id);
         setPersons(filteredArray.concat(changedPerson));
@@ -87,6 +93,7 @@ const App = () => {
             .remove(person.id)
             .then(res => {
                 setMessage(`Removed ${person.name}`)
+                setMessageType("success")
                 setTimeout(() => {
                     setMessage(null)
                 }, 5000)
@@ -110,7 +117,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <Notification message={message} />
+            <Notification message={message} type={messageType} />
             <PhoneBookFilter handleFilterChange={handleFilterChange} />
             <h2>Add new</h2>
             <PhoneBookForm addPerson={addPerson} handleNameChange={handleNameChange} handlePhoneChange={handlePhoneChange} />
