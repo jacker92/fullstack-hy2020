@@ -22,10 +22,7 @@ const blogs = [{
 
 beforeEach(async () => {
     await Blog.deleteMany({})
-    blogs.forEach(async x => {
-        let blog = new Blog(x)
-        await blog.save()
-    })
+    Blog.insertMany(blogs)
 })
 
 test('blogs are returned as json', async () => {
@@ -50,6 +47,28 @@ test('a specific blog is within the returned blogs', async () => {
 test('a blog has id field', async () => {
     const response = await api.get('/api/blogs')
     response.body.forEach(x => expect(x.id).toBeDefined())
+})
+
+test('adding a blog will increase blog count by one', async () => {
+    const newBlog = {
+        title: 'React',
+        author: 'Michael',
+        url: 'https://google.com/',
+        likes: 7111
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+    expect(response.body).toHaveLength(blogs.length + 1)
+
+    const title = response.body.map(r => r.title)
+
+    expect(title).toContain(newBlog.title)
 })
 
 afterAll(() => {
