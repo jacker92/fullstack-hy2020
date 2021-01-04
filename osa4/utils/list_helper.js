@@ -1,4 +1,4 @@
-const lodash = require('lodash')
+const _ = require('lodash')
 
 // eslint-disable-next-line no-unused-vars
 const dummy = (blogs) => {
@@ -24,13 +24,28 @@ const favoriteBlog = (blogs) => {
 }
 
 const mostBlogs = (blogs) => {
-    const group = lodash.groupBy(blogs, 'author')
-    const authorsWithSumOfBlogs = lodash.map(lodash.keys(group), (e) => {
+    const group = _.groupBy(blogs, 'author')
+    const authorsWithSumOfBlogs = _.map(_.keys(group), (e) => {
         return { author: e, blogs: group[e].length }
     })
 
-    return lodash.maxBy(authorsWithSumOfBlogs, (x) => {
+    return _.maxBy(authorsWithSumOfBlogs, (x) => {
         return x.blogs
+    })
+}
+
+const mostLikes = (blogs) => {
+    const group = _.groupBy(blogs, 'author')
+
+    const authorsWithSumOfLikes = _.map(_.keys(group), (e) => {
+        const likes = group[e].reduce((sum, next) => {
+            return sum + next.likes
+        }, 0)
+        return { author: e, likes: likes }
+    })
+
+    return _.maxBy(authorsWithSumOfLikes, (x) => {
+        return x.likes
     })
 }
 
@@ -38,5 +53,6 @@ module.exports = {
     dummy,
     totalLikes,
     favoriteBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
 }
