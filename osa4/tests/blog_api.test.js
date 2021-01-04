@@ -89,6 +89,47 @@ test('adding a blog with no likes will set likes to 0', async () => {
     expect(value.likes).toBe(0)
 })
 
+test('adding a blog with no title or url will return 400', async () => {
+    const newBlog = {
+        author: 'Michael'
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+})
+
+test('adding a blog with no title will return 400', async () => {
+    const newBlog = {
+        author: 'Michael',
+        url: 'https://www.google.fi'
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+})
+
+test('adding a blog with no url will return 400', async () => {
+    const newBlog = {
+        author: 'Michael',
+        title: 'React'
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
