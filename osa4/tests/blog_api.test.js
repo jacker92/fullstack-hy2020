@@ -167,6 +167,51 @@ describe('adding new blogs', () => {
     })
 })
 
+describe('updating a blog', () => {
+    test('updating single blog should be successful', async () => {
+        const blogsAtStart = await helper.blogsInDB()
+        const blog = blogsAtStart[0]
+
+        const newTitle = 'tester'
+        blog.title = newTitle
+
+        const result = await api
+            .put(`/api/blogs/${blog.id}`)
+            .send(blog)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+        expect(result.body).toEqual(blog)
+    })
+
+    test('if blog with provided id not found then return 404', async () => {
+        const newBlog = {
+            id: '5ff2f10e97ca813c709c6822',
+            author: 'Michael',
+            title: 'React'
+        }
+
+        await api
+            .put(`/api/blogs/${newBlog.id}`)
+            .send(newBlog)
+            .expect(404)
+    })
+
+    test('if blog with invalid id then return 400', async () => {
+        const newBlog = {
+            id: 'abc',
+            author: 'Michael',
+            title: 'React'
+        }
+
+        await api
+            .put(`/api/blogs/${newBlog.id}`)
+            .send(newBlog)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+    })
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
