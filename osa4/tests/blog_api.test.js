@@ -71,6 +71,24 @@ test('adding a blog will increase blog count by one', async () => {
     expect(title).toContain(newBlog.title)
 })
 
+test('adding a blog with no likes will set likes to 0', async () => {
+    const newBlog = {
+        title: 'React',
+        author: 'Michael',
+        url: 'https://google.com/'
+    }
+
+    const createdObject = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+    const value = response.body.find(x => x.id === createdObject.body.id)
+    expect(value.likes).toBe(0)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
