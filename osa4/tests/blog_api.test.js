@@ -22,7 +22,7 @@ const blogs = [{
 
 beforeEach(async () => {
     await Blog.deleteMany({})
-    Blog.insertMany(blogs)
+    await Blog.insertMany(blogs)
 })
 
 test('blogs are returned as json', async () => {
