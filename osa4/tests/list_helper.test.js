@@ -109,3 +109,23 @@ describe('favorite blog', () => {
         expect(result).toEqual(expected)
     })
 })
+
+describe('Author with most blogs', () => {
+    test('when blogs count is one', () => {
+        const result = listHelper.mostBlogs(listWithOneBlog)
+        const expected = {
+            author: listWithOneBlog[0].author,
+            blogs: 1
+        }
+        expect(result).toEqual(expected)
+    })
+
+    test('return author with most blogs when provided list of blogs', () => {
+        const result = listHelper.mostBlogs(blogs)
+        const expected = {
+            author: blogs[3].author,
+            blogs: 3
+        }
+        expect(result).toEqual(expected)
+    })
+})
