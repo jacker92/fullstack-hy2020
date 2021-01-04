@@ -10,12 +10,41 @@ const api = supertest(app)
 const Blog = require('../models/blog')
 
 beforeEach(async () => {
+    await User.deleteMany({})
     await Blog.deleteMany({})
+
+    await createTestUser()
+
     const blogObjects = helper.initialBlogs
         .map(blog => new Blog(blog))
     const promiseArray = blogObjects.map(blog => blog.save())
     await Promise.all(promiseArray)
 })
+
+const createTestUser = async () => {
+    const passwordHash = await bcrypt.hash('sekret', 10)
+    const user = new User({ username: 'root', passwordHash })
+    helper.initialBlogs = helper.initialBlogs.map(x => {
+        x.user = user.id.toString()
+        return x
+    })
+    await user.save()
+}
+
+const getToken = async (usrname, pwd) => {
+    const username = usrname || 'root'
+    const password = pwd || 'sekret'
+    const result = await api
+        .post('/api/login')
+        .send({
+            username: username,
+            password: password
+        })
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+    return result.body.token
+}
 
 describe('viewing all blogs', () => {
     test('blogs are returned as json', async () => {
@@ -66,7 +95,6 @@ describe('viewing specific blog', () => {
             .get('/api/blogs/5ff2f10e97ca813c709c6822')
             .expect(404)
     })
-
 })
 
 describe('blog is removed', () => {
@@ -74,8 +102,11 @@ describe('blog is removed', () => {
         const blogsAtStart = await helper.blogsInDB()
         const blog = blogsAtStart[0]
 
+        const token = await getToken()
+
         await api
             .delete(`/api/blogs/${blog.id}`)
+            .set({ 'Authorization': `BEARER ${token}` })
             .expect(204)
 
         const blogsAtEnd = await helper.blogsInDB()
@@ -85,6 +116,33 @@ describe('blog is removed', () => {
         const title = blogsAtEnd.map(r => r.title)
 
         expect(title).not.toContain(blog.title)
+    })
+
+    test('will fail with 401 if without token', async () => {
+        const blogsAtStart = await helper.blogsInDB()
+        const blog = blogsAtStart[0]
+
+        await api
+            .delete(`/api/blogs/${blog.id}`)
+            .expect(401)
+    })
+
+    test('will fail with 401 if tried to remove another user blog', async () => {
+        const blogsAtStart = await helper.blogsInDB()
+        const blog = blogsAtStart[0]
+
+        const username = 'tester'
+        const password = 'sekret'
+        const passwordHash = await bcrypt.hash(password, 10)
+        const user = new User({ username: username, passwordHash })
+        await user.save()
+
+        const token = await getToken(username, password)
+
+        await api
+            .delete(`/api/blogs/${blog.id}`)
+            .set({ 'Authorization': `BEARER ${token}` })
+            .expect(401)
     })
 })
 
@@ -97,8 +155,11 @@ describe('adding new blogs', () => {
             likes: 7111
         }
 
+        const token = await getToken()
+
         await api
             .post('/api/blogs')
+            .set({ 'Authorization': `BEARER ${token}` })
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -118,8 +179,11 @@ describe('adding new blogs', () => {
             url: 'https://google.com/'
         }
 
+        const token = await getToken()
+
         const createdObject = await api
             .post('/api/blogs')
+            .set({ 'Authorization': `BEARER ${token}` })
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -134,8 +198,11 @@ describe('adding new blogs', () => {
             author: 'Michael'
         }
 
+        const token = await getToken()
+
         await api
             .post('/api/blogs')
+            .set({ 'Authorization': `BEARER ${token}` })
             .send(newBlog)
             .expect(400)
             .expect('Content-Type', /application\/json/)
@@ -148,8 +215,10 @@ describe('adding new blogs', () => {
             url: 'https://www.google.fi'
         }
 
+        const token = await getToken()
         await api
             .post('/api/blogs')
+            .set({ 'Authorization': `BEARER ${token}` })
             .send(newBlog)
             .expect(400)
             .expect('Content-Type', /application\/json/)
@@ -162,8 +231,10 @@ describe('adding new blogs', () => {
             title: 'React'
         }
 
+        const token = await getToken()
         await api
             .post('/api/blogs')
+            .set({ 'Authorization': `BEARER ${token}` })
             .send(newBlog)
             .expect(400)
             .expect('Content-Type', /application\/json/)
@@ -200,7 +271,7 @@ describe('updating a blog', () => {
             .expect(404)
     })
 
-    test('if blog with invalid id then return 400', async () => {
+    test('blog with invalid id returns 400', async () => {
         const newBlog = {
             id: 'abc',
             author: 'Michael',
@@ -216,15 +287,6 @@ describe('updating a blog', () => {
 })
 
 describe('when there is initially one user at db', () => {
-    beforeEach(async () => {
-        await User.deleteMany({})
-
-        const passwordHash = await bcrypt.hash('sekret', 10)
-        const user = new User({ username: 'root', passwordHash })
-
-        await user.save()
-    })
-
     test('creation succeeds with a fresh username', async () => {
         const usersAtStart = await helper.usersInDb()
 
