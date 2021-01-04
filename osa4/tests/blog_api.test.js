@@ -41,6 +41,29 @@ describe('viewing specific blog', () => {
         const response = await api.get('/api/blogs')
         response.body.forEach(x => expect(x.id).toBeDefined())
     })
+
+    test('a single blog can be retrieved', async () => {
+        const blogs = await helper.blogsInDB()
+        const blog = blogs[0]
+        const response = await api
+            .get(`/api/blogs/${blog.id}`)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+        expect(response.body).toEqual(blog)
+    })
+
+    test('with invalid id returns 400', async () => {
+        await api
+            .get('/api/blogs/abc')
+            .expect(400)
+    })
+    test('with not found id returns 404', async () => {
+        await api
+            .get('/api/blogs/5ff2f10e97ca813c709c6822')
+            .expect(404)
+    })
+
 })
 
 describe('blog is removed', () => {
