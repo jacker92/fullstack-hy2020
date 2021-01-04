@@ -6,7 +6,8 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
-    "test": "cross-env NODE_ENV=test jest --verbose --runInBand"
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
+    "lint": "eslint ."
   },
   "author": "Jaakko Lahtinen",
   "license": "ISC",
@@ -17,7 +18,8 @@
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
     "lodash": "^4.17.20",
-    "mongoose": "^5.11.9"
+    "mongoose": "^5.11.9",
+    "mongoose-unique-validator": "^2.0.3"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
