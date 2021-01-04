@@ -9,6 +9,7 @@ const LoginForm = ({ setUser }) => {
         e.preventDefault();
         const token = await loginService.login(username, password)
         setUser(token)
+        window.localStorage.setItem('token', JSON.stringify(token))
     }
     return (
         <div>
