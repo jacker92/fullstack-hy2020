@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-const Blog = ({ blog, setLike }) => {
+const Blog = ({ blog, setLike, user, removeBlog }) => {
   const [visible, setVisible] = useState(false)
 
   const blogStyle = {
@@ -18,13 +18,21 @@ const Blog = ({ blog, setLike }) => {
     e.target.style.color = 'black';
   }
 
+  const removeButton = () => {
+    if (user.id.toString() === blog.user.toString()) {
+      return (
+        <button onClick={() => removeBlog(blog)}>Remove blog</button>
+      )
+    }
+  }
+
   if (visible) {
     return (
       <div style={blogStyle}>
         <p onMouseEnter={onMouseEnterParagraph}
           onMouseLeave={onMouseLeaveParagraph}
           onClick={() => setVisible(!visible)}>
-          {blog.title}
+          <b>{blog.title}</b>
         </p>
         {blog.url}<br />
           likes {blog.likes}
@@ -34,6 +42,8 @@ const Blog = ({ blog, setLike }) => {
             </button>
         <br />
         {blog.author}
+        <br />
+        {removeButton()}
       </div>
     )
   }

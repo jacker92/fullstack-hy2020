@@ -1,7 +1,7 @@
 import React from 'react'
 import Blog from './Blog'
 
-const DisplayForm = ({ user, blogs, logout, setLike }) => {
+const DisplayForm = ({ user, blogs, logout, setLike, removeBlog }) => {
 
     const compareOnLikes = (x, y) => {
         if (x.likes < y.likes) {
@@ -18,7 +18,7 @@ const DisplayForm = ({ user, blogs, logout, setLike }) => {
             {blogs
                 .sort(compareOnLikes)
                 .map(blog =>
-                    <Blog key={blog.id} blog={blog} setLike={setLike} />
+                    <Blog key={blog.id} blog={blog} setLike={setLike} user={user} removeBlog={removeBlog} />
                 )}
         </div>
     )

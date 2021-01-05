@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import loginService from '../services/login'
 
-const LoginForm = ({ setUser, setNotification }) => {
+const LoginForm = ({ login, setNotification }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
@@ -10,7 +10,7 @@ const LoginForm = ({ setUser, setNotification }) => {
 
         try {
             const token = await loginService.login(username, password)
-            setUser(token)
+            login(token)
             window.localStorage.setItem('token', JSON.stringify(token))
         } catch (e) {
             setNotification(e.response.data.error, 'error')
