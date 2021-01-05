@@ -12,7 +12,6 @@ const App = () => {
   const [user, setUser] = useState()
   const [message, setMessage] = useState()
   const [messageType, setMessageType] = useState()
-  const [rendered, setRendered] = useState(false)
 
   const createFormRef = useRef()
 
@@ -48,7 +47,6 @@ const App = () => {
       blogService.setToken(asJson)
       const response = await userService.getByUserName(asJson.username)
       setUser(response)
-      setRendered(true)
     }
   }
 
@@ -89,10 +87,6 @@ const App = () => {
     setTimeout(() => {
       setMessage(null)
     }, 5000)
-  }
-
-  if (!rendered) {
-    return (<div></div>)
   }
 
   if (!user) {
