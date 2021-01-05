@@ -47,8 +47,13 @@ const App = () => {
     }
   }
 
+  const setLike = async (blog) => {
+    blog.likes += 1
+    await blogService.update(blog)
+    setBlogs([...blogs])
+  }
+
   const setNotification = (message, type) => {
-    console.log("hello", message, type)
     setMessage(message)
     setMessageType(type)
 
@@ -70,7 +75,7 @@ const App = () => {
     <div>
       <h2>Blogs</h2>
       <Notification message={message} type={messageType} />
-      <DisplayForm user={user} blogs={blogs} logout={logout} />
+      <DisplayForm user={user} blogs={blogs} logout={logout} setLike={setLike} />
       <Togglable buttonLabel='Create new blog' ref={createFormRef}>
         <CreateNewForm createNew={createBlog} />
       </Togglable>

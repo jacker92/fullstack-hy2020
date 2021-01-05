@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-const Blog = ({ blog }) => {
+const Blog = ({ blog, setLike }) => {
   const [visible, setVisible] = useState(false)
 
   const blogStyle = {
@@ -10,16 +10,12 @@ const Blog = ({ blog }) => {
     marginBottom: 5
   }
 
-  function onMouseEnterParagraph(e) {
+  const onMouseEnterParagraph = (e) => {
     e.target.style.color = '#4e5951';
   }
 
-  function onMouseLeaveParagraph(e) {
+  const onMouseLeaveParagraph = (e) => {
     e.target.style.color = 'black';
-  }
-
-  const setLike = () => {
-    console.log("setting like")
   }
 
   if (visible) {
@@ -31,7 +27,12 @@ const Blog = ({ blog }) => {
           {blog.title}
         </p>
         {blog.url}<br />
-          likes {blog.likes} <button onClick={() => setLike()}>Like</button><br />
+          likes {blog.likes}
+        <button
+          onClick={() => setLike(blog)}>
+          Like
+            </button>
+        <br />
         {blog.author}
       </div>
     )
