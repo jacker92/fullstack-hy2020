@@ -4,21 +4,28 @@ const user = {
   password: 'password'
 }
 
+const user2 = {
+  name: 'Tester2',
+  username: 'test2',
+  password: 'password2'
+}
+
 const blog = {
   title: 'testiblogi',
   author: 'testaaja tunnus',
   url: 'https://www.gogle.fi'
 }
 
-const resetAndCreateUser = () => {
+const resetAndCreateUsers = () => {
   cy.request('POST', 'http://localhost:3001/api/testing/reset')
   cy.request('POST', 'http://localhost:3001/api/users/', user)
+  cy.request('POST', 'http://localhost:3001/api/users/', user2)
   cy.visit('http://localhost:3000')
 }
 
-const signIn = () => {
-  cy.get('input:first').type(user.username)
-  cy.get('input[name="password"]').type(user.password)
+const signIn = (usr) => {
+  cy.get('input:first').type(usr.username)
+  cy.get('input[name="password"]').type(usr.password)
   cy.get('#login-button').click()
 }
 
@@ -33,7 +40,7 @@ const createBlog = () => {
 
 describe('Blog ', function() {
   beforeEach(function() {
-    resetAndCreateUser()
+    resetAndCreateUsers()
   })
   it('Login form is shown', function() {
     cy.contains('Log in to application')
@@ -41,7 +48,7 @@ describe('Blog ', function() {
 
   describe('Login',function() {
     it('succeeds with correct credentials', function() {
-      signIn()
+      signIn(user)
       cy.contains('Blogs')
     })
 
@@ -58,7 +65,7 @@ describe('Blog ', function() {
 
   describe('When logged in', function() {
     beforeEach(function() {
-      signIn()
+      signIn(user)
     })
 
     it('A blog can be created', function() {
@@ -78,6 +85,19 @@ describe('Blog ', function() {
         cy.contains('likes 0')
         cy.contains('Like').click()
         cy.contains('likes 1')
+      })
+
+      it('A blog can be removed', function() {
+        cy.contains(`${blog.title} ${blog.author}`).click()
+        cy.contains('Remove').click()
+        cy.should('not.contain', `${blog.title} ${blog.author}`)
+      })
+
+      it('Blog created by another user cannot be removed', function() {
+        cy.contains('Logout').click()
+        signIn(user2)
+        cy.contains(`${blog.title} ${blog.author}`).click()
+        cy.should('not.contain', 'Remove')
       })
     })
   })
