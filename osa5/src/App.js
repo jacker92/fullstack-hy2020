@@ -36,6 +36,7 @@ const App = () => {
     }
     catch (e) {
       console.log(e)
+      alert(e)
       setNotification(e.response.data.error, 'error')
     }
   }
@@ -62,14 +63,16 @@ const App = () => {
   }
 
   const createBlog = async (event, blog) => {
+    alert( blog)
     event.preventDefault()
     try {
       const result = await blogService.create(blog)
       setNotification(`A new blog ${result.title} by ${result.author} added`, 'success')
-      createFormRef.current.toggleVisibility()
+      if(createFormRef.current) {
+        createFormRef.current.toggleVisibility()
+      }
       setBlogs(blogs.concat(result))
     } catch (e) {
-      console.log(e)
       setNotification(e.response.data.error, 'error')
     }
   }
