@@ -41,7 +41,7 @@ const LoginForm = ({ login, setNotification }) => {
             </tr>
           </tbody>
         </table>
-        <input type="submit" value="Submit" />
+        <input id="login-button" type="submit" value="Submit" />
       </form>
     </div>
   )
