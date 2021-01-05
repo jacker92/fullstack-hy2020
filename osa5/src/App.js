@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
 import DisplayForm from './components/DisplayForm'
 import CreateNewForm from './components/CreateNewForm'
+import Togglable from './components/Togglable'
 import './App.css'
 
 const App = () => {
@@ -10,6 +11,8 @@ const App = () => {
   const [user, setUser] = useState()
   const [message, setMessage] = useState()
   const [messageType, setMessageType] = useState()
+
+  const createFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -37,7 +40,9 @@ const App = () => {
     try {
       const result = await blogService.create(blog)
       setNotification(`A new blog ${result.title} by ${result.author} added`, 'success')
+      createFormRef.current.toggleVisibility()
     } catch (e) {
+      console.log(e)
       setNotification(e.response.data.error, 'error')
     }
   }
@@ -66,7 +71,9 @@ const App = () => {
       <h2>Blogs</h2>
       <Notification message={message} type={messageType} />
       <DisplayForm user={user} blogs={blogs} logout={logout} />
-      <CreateNewForm createNew={createBlog} />
+      <Togglable buttonLabel='Create new blog' ref={createFormRef}>
+        <CreateNewForm createNew={createBlog} />
+      </Togglable>
     </div>
   )
 }
