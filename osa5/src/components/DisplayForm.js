@@ -15,7 +15,7 @@ const DisplayForm = ({ user, blogs, logout, setLike, removeBlog }) => {
   }
 
   return (
-    <div>
+    <div id='blogs'>
       <p><b>{user.username}</b> has logged in</p>
       <button onClick={logout}>Logout</button>
       {blogs

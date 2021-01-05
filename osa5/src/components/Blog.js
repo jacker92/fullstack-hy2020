@@ -51,7 +51,7 @@ const Blog = ({ blog, setLike, user, removeBlog }) => {
   }
 
   return (
-    <div>
+    <div className='blog'>
       <p
         onMouseEnter={onMouseEnterParagraph}
         onMouseLeave={onMouseLeaveParagraph}

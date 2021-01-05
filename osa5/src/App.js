@@ -79,8 +79,8 @@ const App = () => {
 
   const setLike = async (blog) => {
     blog.likes += 1
-    await blogService.update(blog)
     setBlogs([...blogs])
+    await blogService.update(blog)
   }
 
   const setNotification = (message, type) => {

@@ -29,9 +29,11 @@ const signIn = (usr) => {
   cy.get('#login-button').click()
 }
 
-const createBlog = () => {
+const createBlog = (title) => {
   cy.contains('Create new blog').click()
-  cy.get('#title').type(blog.title)
+
+  const blogTitle = title ? title : blog.title
+  cy.get('#title').type(blogTitle)
   cy.get('#author').type(blog.author)
   cy.get('#url').type(blog.url)
 
@@ -98,6 +100,30 @@ describe('Blog ', function() {
         signIn(user2)
         cy.contains(`${blog.title} ${blog.author}`).click()
         cy.should('not.contain', 'Remove')
+      })
+
+      it('Blogs should be in sorted order based on amount of likes', function() {
+        const blogTitle = 'another blog'
+        const firstBlog = `${blog.title} ${blog.author}`
+        const secondBlog = `${blogTitle} ${blog.author}`
+        createBlog(blogTitle)
+
+        cy.contains(firstBlog).click()
+        cy.contains(secondBlog).click()
+
+        cy.get('#blogs').children('div').first().contains(blog.title)
+        cy.get('#blogs').children('div').last().contains(blogTitle)
+
+        cy.get('#blogs').children('div').last().contains('Like').click()
+
+        cy.get('#blogs').children('div').first().contains(blogTitle)
+        cy.get('#blogs').children('div').last().contains(blog.title)
+
+        cy.get('#blogs').children('div').last().contains('Like').click()
+        cy.get('#blogs').children('div').last().contains('Like').click()
+
+        cy.get('#blogs').children('div').first().contains(blog.title)
+        cy.get('#blogs').children('div').last().contains(blogTitle)
       })
     })
   })
