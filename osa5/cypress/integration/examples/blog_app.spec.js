@@ -14,7 +14,6 @@ describe('Blog ', function() {
     cy.contains('Log in to application')
   })
 
-
   describe('Login',function() {
     it('succeeds with correct credentials', function() {
       cy.get('input:first').type(user.username)
@@ -34,4 +33,29 @@ describe('Blog ', function() {
 
   })
 
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.get('input:first').type(user.username)
+      cy.get('input[name="password"]').type(user.password)
+      cy.get('#login-button').click()
+    })
+
+    const blog = {
+      title: 'testiblogi',
+      author: 'testaaja tunnus',
+      url: 'https://www.gogle.fi'
+    }
+
+    it('A blog can be created', function() {
+      cy.contains('Create new blog').click()
+      cy.get('#title').type(blog.title)
+      cy.get('#author').type(blog.author)
+      cy.get('#url').type(blog.url)
+
+      cy.get('input[type="submit"]').click()
+
+      cy.contains(blog.title)
+      cy.contains(blog.author)
+    })
+  })
 })
