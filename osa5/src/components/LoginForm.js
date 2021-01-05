@@ -1,15 +1,20 @@
 import React, { useState } from 'react'
 import loginService from '../services/login'
 
-const LoginForm = ({ setUser }) => {
+const LoginForm = ({ setUser, setNotification }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        const token = await loginService.login(username, password)
-        setUser(token)
-        window.localStorage.setItem('token', JSON.stringify(token))
+
+        try {
+            const token = await loginService.login(username, password)
+            setUser(token)
+            window.localStorage.setItem('token', JSON.stringify(token))
+        } catch (e) {
+            setNotification(e.response.data.error, 'error')
+        }
     }
     return (
         <div>

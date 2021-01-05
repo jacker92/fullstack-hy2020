@@ -8,6 +8,8 @@ import './App.css'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState()
+  const [message, setMessage] = useState()
+  const [messageType, setMessageType] = useState()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -25,23 +27,61 @@ const App = () => {
   }, [])
 
   const logout = () => {
-    window.localStorage.setItem('token', null)
+    window.localStorage.clear()
     setUser()
+  }
+
+  const createBlog = async (event, blog) => {
+    event.preventDefault()
+    console.log("In Create bog", blog)
+    try {
+      const result = await blogService.create(blog)
+      setNotification(`A new blog ${result.title} by ${result.author} added`, 'success')
+    } catch (e) {
+      setNotification(e.response.data.error, 'error')
+    }
+  }
+
+  const setNotification = (message, type) => {
+    console.log("hello", message, type)
+    setMessage(message)
+    setMessageType(type)
+
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
   }
 
   if (!user) {
     return (
-      <LoginForm setUser={setUser} />
+      <div>
+        <Notification message={message} type={messageType} />
+        <LoginForm setUser={setUser} setNotification={setNotification} />
+      </div>
     )
   }
 
   return (
     <div>
       <h2>Blogs</h2>
+      <Notification message={message} type={messageType} />
       <DisplayForm user={user} blogs={blogs} logout={logout} />
-      <CreateNewForm createNew={async blog => await blogService.create(blog)} />
+      <CreateNewForm createNew={createBlog} />
     </div>
   )
 }
 
+
+const Notification = ({ message, type }) => {
+  if (!message) {
+    return null
+  }
+
+  const className = type === 'error' ? 'error' : 'success'
+  return (
+    <div className={className}>
+      {message}
+    </div>
+  )
+}
 export default App
