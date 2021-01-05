@@ -1,5 +1,6 @@
 import React from 'react'
 import Blog from './Blog'
+import PropTypes from 'prop-types'
 
 const DisplayForm = ({ user, blogs, logout, setLike, removeBlog }) => {
 
@@ -22,6 +23,14 @@ const DisplayForm = ({ user, blogs, logout, setLike, removeBlog }) => {
                 )}
         </div>
     )
+}
+
+DisplayForm.propTypes = {
+    user: PropTypes.object.isRequired,
+    blogs: PropTypes.array.isRequired,
+    logout: PropTypes.func.isRequired,
+    setLike: PropTypes.func.isRequired,
+    removeBlog: PropTypes.func.isRequired
 }
 
 export default DisplayForm
