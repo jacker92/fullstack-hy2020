@@ -50,7 +50,7 @@ const App = () => {
       setUser(response)
       setRendered(true)
     }
-  };
+  }
 
   const logout = () => {
     window.localStorage.clear()

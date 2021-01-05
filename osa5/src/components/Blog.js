@@ -13,11 +13,11 @@ const Blog = ({ blog, setLike, user, removeBlog }) => {
   }
 
   const onMouseEnterParagraph = (e) => {
-    e.target.style.color = '#4e5951';
+    e.target.style.color = '#4e5951'
   }
 
   const onMouseLeaveParagraph = (e) => {
-    e.target.style.color = 'black';
+    e.target.style.color = 'black'
   }
 
   const removeButton = () => {
@@ -41,7 +41,7 @@ const Blog = ({ blog, setLike, user, removeBlog }) => {
         <button
           onClick={() => setLike(blog)}>
           Like
-            </button>
+        </button>
         <br />
         {blog.author}
         <br />

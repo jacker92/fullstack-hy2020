@@ -1,7 +1,7 @@
 import axios from 'axios'
 const baseUrl = '/api/blogs'
 
-let _token;
+let _token
 
 const getAll = async () => {
   const request = await axios.get(baseUrl)
