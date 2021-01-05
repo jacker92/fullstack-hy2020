@@ -7,7 +7,6 @@ require('express-async-errors')
 blogsRouter.get('/', async (request, response) => {
     const blogs = await Blog
         .find({})
-        .populate('user', { username: 1, name: 1 })
     response.json(blogs.map(blog => blog.toJSON()))
 })
 
@@ -52,6 +51,7 @@ blogsRouter.post('/', async (request, response) => {
     const user = await User.findById(decodedToken.id)
 
     blog.user = user.id
+
     const result = await blog.save()
 
     user.blogs = user.blogs.concat(result._id)
