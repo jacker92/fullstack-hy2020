@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {addVoteTo, addAnekdote} from './reducers/anecdoteReducer'
+import {compareOnVotes} from './utils/utils'
 
 const App = () => {
   const anecdotes = useSelector(state => state)
@@ -21,7 +22,7 @@ const App = () => {
   return (
     <div>
       <h2>Anecdotes</h2>
-      {anecdotes.map(anecdote =>
+      {anecdotes.sort(compareOnVotes).map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}

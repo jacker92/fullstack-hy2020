@@ -35,7 +35,7 @@ const reducer = (state = initialState, action) => {
         anekdote.id !== id ? anekdote : changedAnecdote 
       )
       case 'ADD_ANEKDOTE':
-        return [...state, action.data]
+        return[...state, action.data]
       default:
         return state
   }
