@@ -1,4 +1,5 @@
 /* eslint-disable no-case-declarations */
+import anecdoteService from './../services/anecdotes'
 
 const reducer = (state = [], action) => {
   switch (action.type) {
@@ -12,8 +13,10 @@ const reducer = (state = [], action) => {
     return state.map(anekdote =>
       anekdote.id !== id ? anekdote : changedAnecdote
     )
-  case 'ADD_ANEKDOTE':
+  case 'ADD_ANECDOTE':
     return [...state, action.data]
+  case 'INIT_ANECDOTES':
+    return action.data
   default:
     return state
   }
@@ -28,12 +31,19 @@ export const addVoteTo = (id) => {
 
 export const addAnekdote = (anecdote) => {
   return {
-    type: 'ADD_ANEKDOTE',
+    type: 'ADD_ANECDOTE',
     data: {
       content: anecdote.content,
       votes: 0,
       id: anecdote.id
     }
+  }
+}
+
+export const initializeAnecdotes = () => {
+  return async dispatch => {
+    const anecdotes = await anecdoteService.getAll()
+    dispatch({ type: 'INIT_ANECDOTES', data: anecdotes })
   }
 }
 
