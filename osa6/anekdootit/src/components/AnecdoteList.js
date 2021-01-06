@@ -1,13 +1,13 @@
 import { compareOnVotes } from './../utils/utils'
 import React from 'react'
-import { addVoteTo } from './../reducers/anecdoteReducer'
+import { addVote } from './../reducers/anecdoteReducer'
 import { setNotification } from './../reducers/notificationReducer'
 import { useSelector, useDispatch } from 'react-redux'
 
 const AnecdoteList = () => {
 
   const vote = (anecdote) => {
-    dispatch(addVoteTo(anecdote.id))
+    dispatch(addVote(anecdote))
     dispatch(setNotification(`You voted '${anecdote.content}'`))
   }
 
