@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import {
   Redirect
 } from "react-router-dom"
@@ -8,6 +8,7 @@ const CreateNew = (props) => {
   const content = useField('text')
   const author = useField('text')
   const info = useField('text')
+  const reset = useField("button")
   const [redirectToHome, setRedirectToHome] = useState(false)
 
   const handleSubmit = (e) => {
@@ -21,8 +22,14 @@ const CreateNew = (props) => {
     setRedirectToHome(true)
   }
 
-  if(redirectToHome) {
-    return <Redirect to='/'/>
+  const resetFields = () => {
+    content.reset()
+    author.reset()
+    info.reset()
+  }
+
+  if (redirectToHome) {
+    return <Redirect to='/' />
   }
 
   return (
@@ -31,21 +38,23 @@ const CreateNew = (props) => {
       <form onSubmit={(e) => handleSubmit(e)}>
         <div>
           content
-            <input name={content.name} value={content.value} onChange={content.onChange} />
+            <input {...content} />
         </div>
         <div>
           author
-            <input name={author.name} value={author.value} onChange={author.onChange} />
+            <input {...author} />
         </div>
         <div>
           url for more info
-            <input name={info.name} value={info.value} onChange={info.onChange} />
+            <input {...info} />
         </div>
-        <button>create</button>
+        <input type='submit'></input>
+        <input onClick={() => resetFields()}{...reset} value='reset'></input>
       </form>
     </div>
   )
 
 }
+
 
 export default CreateNew
