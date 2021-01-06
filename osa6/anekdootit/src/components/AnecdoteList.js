@@ -10,7 +10,7 @@ const AnecdoteList = () => {
     dispatch(addVoteTo(id))
   }
 
-  const anecdotes = useSelector(state => state)
+  const anecdotes = useSelector(state => state.anecdotes)
   const dispatch = useDispatch()
   return (
     <div>
