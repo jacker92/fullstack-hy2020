@@ -1,10 +1,13 @@
 import React, {useState} from 'react'
+import {
+  Redirect
+} from "react-router-dom"
 
 const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
-
+  const [redirectToHome, setRedirectToHome] = useState(false)
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -14,12 +17,17 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    setRedirectToHome(true)
+  }
+
+  if(redirectToHome) {
+    return <Redirect to='/'/>
   }
 
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => handleSubmit(e)}>
         <div>
           content
             <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
