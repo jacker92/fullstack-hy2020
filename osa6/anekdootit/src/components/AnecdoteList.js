@@ -7,12 +7,14 @@ import { useSelector, useDispatch } from 'react-redux'
 const AnecdoteList = () => {
 
   const vote = (anecdote) => {
-    console.log('anecdote', anecdote)
     dispatch(addVoteTo(anecdote.id))
     dispatch(setNotification(`You voted '${anecdote.content}'`))
   }
 
-  const anecdotes = useSelector(state => state.anecdotes)
+  const anecdotes = useSelector(state => {
+    return state.anecdotes.filter(x => x.content.includes(state.filters))
+  })
+
   const dispatch = useDispatch()
   return (
     <div>
