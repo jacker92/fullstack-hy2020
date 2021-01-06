@@ -5,10 +5,10 @@ import {
 import { useField } from './../hooks/index'
 
 const CreateNew = (props) => {
-  const content = useField('text')
-  const author = useField('text')
-  const info = useField('text')
-  const reset = useField("button")
+  const {reset: reset1, ...content} = useField('text')
+  const {reset: reset2, ...author} = useField('text')
+  const {reset: reset3, ...info} = useField('text')
+  const {reset: reset4, ...rs} = useField('button')
   const [redirectToHome, setRedirectToHome] = useState(false)
 
   const handleSubmit = (e) => {
@@ -22,10 +22,10 @@ const CreateNew = (props) => {
     setRedirectToHome(true)
   }
 
-  const resetFields = () => {
-    content.reset()
-    author.reset()
-    info.reset()
+  const resetFields = (e) => {
+    reset1()
+    reset2()
+    reset3()
   }
 
   if (redirectToHome) {
@@ -49,7 +49,7 @@ const CreateNew = (props) => {
             <input {...info} />
         </div>
         <input type='submit'></input>
-        <input onClick={() => resetFields()}{...reset} value='reset'></input>
+        <button onClick={(e) => resetFields(e)}{...rs}>reset</button>
       </form>
     </div>
   )
