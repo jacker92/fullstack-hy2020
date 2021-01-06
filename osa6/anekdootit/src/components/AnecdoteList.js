@@ -8,7 +8,7 @@ const AnecdoteList = () => {
 
   const vote = (anecdote) => {
     dispatch(addVote(anecdote))
-    dispatch(setNotification(`You voted '${anecdote.content}'`))
+    dispatch(setNotification(`You voted '${anecdote.content}'`, 5))
   }
 
   const anecdotes = useSelector(state => {
