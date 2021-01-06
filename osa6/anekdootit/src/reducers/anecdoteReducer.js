@@ -1,7 +1,5 @@
 /* eslint-disable no-case-declarations */
 
-const getId = () => (100000 * Math.random()).toFixed(0)
-
 const reducer = (state = [], action) => {
   switch (action.type) {
   case 'ADD_VOTE':
@@ -28,13 +26,13 @@ export const addVoteTo = (id) => {
   }
 }
 
-export const addAnekdote = (content) => {
+export const addAnekdote = (anecdote) => {
   return {
     type: 'ADD_ANEKDOTE',
     data: {
-      content,
+      content: anecdote.content,
       votes: 0,
-      id: getId()
+      id: anecdote.id
     }
   }
 }
