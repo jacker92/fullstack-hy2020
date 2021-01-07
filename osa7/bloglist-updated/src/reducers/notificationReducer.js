@@ -17,9 +17,7 @@ const reducer = (state = notification, action) => {
 }
 
 const setNotification = ( message, type) => {
-  console.log('In Here!', message, type)
   return async dispatch =>  {
-    console.log(`Setting notification ${message}!`)
     dispatch(
       {
         type: 'SHOW_NOTIFICATION',

@@ -1,11 +1,14 @@
 import React from 'react'
 import Blog from './Blog'
-import PropTypes from 'prop-types'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { logout } from '../reducers/credentialReducer'
 
-const DisplayForm = ({ user, logout }) => {
+const DisplayForm = () => {
 
   const blogs = useSelector(state => state.blogs)
+  const credential = useSelector(state => state.credential)
+
+  const dispatch = useDispatch()
 
   const compareOnLikes = (x, y) => {
     if (x.likes < y.likes) {
@@ -17,23 +20,19 @@ const DisplayForm = ({ user, logout }) => {
     return 0
   }
 
+  console.log('Blogs content is', blogs)
   return (
     <div id='blogs'>
-      <p><b>{user.username}</b> has logged in</p>
-      <button onClick={logout}>Logout</button>
+      <p><b>{credential.username}</b> has logged in</p>
+      <button onClick={() => dispatch(logout())}>Logout</button>
       {blogs
         .sort(compareOnLikes)
         .map(blog =>
-          <Blog key={blog.id} blog={blog} user={user} />
+          <Blog key={blog.id} blog={blog} />
         )}
     </div>
   )
 
-}
-
-DisplayForm.propTypes = {
-  user: PropTypes.object.isRequired,
-  logout: PropTypes.func.isRequired
 }
 
 export default DisplayForm

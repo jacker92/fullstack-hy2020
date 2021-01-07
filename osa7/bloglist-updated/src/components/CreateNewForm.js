@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react'
 import { addBlog } from './../reducers/blogReducer'
 import { useDispatch } from 'react-redux'
 
-const CreateNewForm = () => {
+const CreateNewForm = (props) => {
   const [title, setTitle] = useState()
   const [author, setAuthor] = useState()
   const [url, setUrl] = useState()
@@ -15,10 +15,7 @@ const CreateNewForm = () => {
     titleInput.current.value = ''
     authorInput.current.value = ''
     urlInput.current.value = ''
-
-    //if (createFormRef.current) {
-    //  createFormRef.current.toggleVisibility()
-    // }
+    props.toggleVisibility()
   }
 
   const titleInput = useRef()

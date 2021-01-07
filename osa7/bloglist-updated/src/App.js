@@ -1,52 +1,28 @@
-import React, { useState, useEffect, useRef } from 'react'
-import blogService from './services/blogs'
-import userService from './services/users'
+import React, { useEffect, useRef } from 'react'
 import LoginForm from './components/LoginForm'
 import DisplayForm from './components/DisplayForm'
 import CreateNewForm from './components/CreateNewForm'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import './App.css'
 import { initializeBlogs } from './reducers/blogReducer'
+import { initializeUser } from './reducers/credentialReducer'
 
 const App = () => {
-  const [user, setUser] = useState()
   const dispatch = useDispatch()
-
-  const createFormRef = useRef()
+  const credential = useSelector(state => state.credential)
 
   useEffect(() => {
-    getTokenFromStorage()
+    dispatch(initializeUser())
     dispatch(initializeBlogs())
   }, [dispatch])
 
-  const getTokenFromStorage = async () => {
-    const token = window.localStorage.getItem('token')
-    if (token) {
-      const asJson = JSON.parse(token)
-      blogService.setToken(asJson)
-      const response = await userService.getByUserName(asJson.username)
-      setUser(response)
-    }
-  }
-
-  const logout = () => {
-    window.localStorage.clear()
-    setUser()
-  }
-
-  const login = async (token) => {
-    blogService.setToken(token)
-    const response = await userService.getByUserName(token.username)
-    setUser(response)
-  }
-
-  if (!user) {
+  if (!credential.token) {
     return (
       <div>
         <Notification />
-        <LoginForm login={login}/>
+        <LoginForm/>
       </div>
     )
   }
@@ -55,8 +31,8 @@ const App = () => {
     <div>
       <h2>Blogs</h2>
       <Notification />
-      <DisplayForm user={user} logout={logout} />
-      <Togglable buttonLabel='Create new blog' ref={createFormRef}>
+      <DisplayForm />
+      <Togglable buttonLabel='Create new blog'>
         <CreateNewForm />
       </Togglable>
     </div>

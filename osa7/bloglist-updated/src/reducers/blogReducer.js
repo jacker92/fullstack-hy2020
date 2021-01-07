@@ -2,10 +2,9 @@ import blogService from './../services/blogs'
 import { setSuccess, setError } from './notificationReducer'
 
 const reducer = (state = [], action) => {
-  console.log('In reducer func!', state, action)
   switch (action.type) {
   case 'ADD_BLOG':
-    return [...state, action.data]
+    return state.concat(action.data)
   case 'REMOVE_BLOG':
     return state.filter(x => x.id !== action.data.id)
   case 'INIT_BLOGS':
@@ -25,15 +24,14 @@ const reducer = (state = [], action) => {
 export const addBlog = (blog) => {
   return async dispatch => {
     try {
-      const result = await blogService.create(blog)
+      const response = await blogService.create(blog)
+      console.log('Created with response', response)
       dispatch(
         {
           type: 'ADD_BLOG',
-          data: {
-            result
-          }
+          data:response
         })
-      dispatch(setSuccess(`A new blog ${result.title} by ${result.author} added`))
+      dispatch(setSuccess(`A new blog ${blog.title} by ${blog.author} added`))
 
     } catch (e) {
       dispatch(setError(e.response.data.error))
