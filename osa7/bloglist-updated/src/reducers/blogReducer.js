@@ -7,16 +7,22 @@ const reducer = (state = [], action) => {
   case 'ADD_BLOG':
     return [...state, action.data]
   case 'REMOVE_BLOG':
-    return state
+    return state.filter(x => x.id !== action.data.id)
   case 'INIT_BLOGS':
     return action.data
+  case 'LIKE_BLOG':
+    return state.map(x => {
+      if (x.id === action.data.id) {
+        return action.data
+      }
+      return x
+    })
   default:
     return state
   }
 }
 
 export const addBlog = (blog) => {
-  // eslint-disable-next-line no-unused-vars
   return async dispatch => {
     try {
       const result = await blogService.create(blog)
@@ -33,14 +39,28 @@ export const addBlog = (blog) => {
       dispatch(setError(e.response.data.error))
     }
   }
-
 }
 
 export const removeBlog = (blog) => {
-  // eslint-disable-next-line no-unused-vars
   return async dispatch => {
-    console.log('removing blog!')
-    //return setNotification(message, 'error')
+    if (!window.confirm(`Remove blog ${blog.title}`)) {
+      return
+    }
+    try {
+      await blogService.remove(blog)
+      dispatch({ type: 'REMOVE_BLOG', data: blog })
+      dispatch(setSuccess(`Blog ${blog.title} by ${blog.author} removed`))
+    } catch (e) {
+      dispatch(setError(e.response.data.error))
+    }
+  }
+}
+
+export const setLike = (blog) => {
+  return async dispatch => {
+    blog.likes += 1
+    await blogService.update(blog)
+    dispatch({ type: 'LIKE_BLOG', data: blog })
   }
 }
 

@@ -6,13 +6,11 @@ import DisplayForm from './components/DisplayForm'
 import CreateNewForm from './components/CreateNewForm'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
-import { setSuccess, setError } from './reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
 import './App.css'
 import { initializeBlogs } from './reducers/blogReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState()
   const dispatch = useDispatch()
 
@@ -20,30 +18,8 @@ const App = () => {
 
   useEffect(() => {
     getTokenFromStorage()
-    getBlogs()
     dispatch(initializeBlogs())
   }, [dispatch])
-
-  const getBlogs = async () => {
-    const blogs = await blogService.getAll()
-    setBlogs(blogs)
-  }
-
-  const removeBlog = async (blog) => {
-    if (!window.confirm(`Remove blog ${blog.title}`)) {
-      return
-    }
-
-    try {
-      await blogService.remove(blog)
-      setBlogs(blogs.filter(x => x.id !== blog.id))
-      dispatch(setSuccess(`${blog.title} removed successfully`))
-    }
-    catch (e) {
-      console.log(e)
-      setError(e.response.data.error)
-    }
-  }
 
   const getTokenFromStorage = async () => {
     const token = window.localStorage.getItem('token')
@@ -66,12 +42,6 @@ const App = () => {
     setUser(response)
   }
 
-  const setLike = async (blog) => {
-    blog.likes += 1
-    setBlogs([...blogs])
-    await blogService.update(blog)
-  }
-
   if (!user) {
     return (
       <div>
@@ -85,7 +55,7 @@ const App = () => {
     <div>
       <h2>Blogs</h2>
       <Notification />
-      <DisplayForm user={user} logout={logout} setLike={setLike} removeBlog={removeBlog} />
+      <DisplayForm user={user} logout={logout} />
       <Togglable buttonLabel='Create new blog' ref={createFormRef}>
         <CreateNewForm />
       </Togglable>

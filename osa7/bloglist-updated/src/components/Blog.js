@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { removeBlog, setLike } from './../reducers/blogReducer'
+import { useDispatch } from 'react-redux'
 
-const Blog = ({ blog, setLike, user, removeBlog }) => {
+const Blog = ({ blog, user }) => {
   const [visible, setVisible] = useState(false)
+  const dispatch = useDispatch()
 
   const blogStyle = {
     paddingTop: 10,
@@ -23,7 +26,7 @@ const Blog = ({ blog, setLike, user, removeBlog }) => {
   const removeButton = () => {
     if (user && blog.user && user.id.toString() === blog.user.toString()) {
       return (
-        <button onClick={() => removeBlog(blog)}>Remove blog</button>
+        <button onClick={() => dispatch(removeBlog(blog))}>Remove blog</button>
       )
     }
   }
@@ -39,7 +42,7 @@ const Blog = ({ blog, setLike, user, removeBlog }) => {
         {blog.url}<br />
           likes {blog.likes}
         <button
-          onClick={() => setLike(blog)}>
+          onClick={() => dispatch(setLike(blog))}>
           Like
         </button>
         <br />
@@ -64,9 +67,7 @@ const Blog = ({ blog, setLike, user, removeBlog }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  setLike: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
-  removeBlog: PropTypes.func.isRequired
+  user: PropTypes.object.isRequired
 }
 
 export default Blog
