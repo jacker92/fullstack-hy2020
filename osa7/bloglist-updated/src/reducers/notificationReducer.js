@@ -2,7 +2,6 @@
 const notification = ''
 
 const reducer = (state = notification, action) => {
-  console.log('In reducer func!', state, action)
   switch (action.type) {
   case 'SHOW_NOTIFICATION':
     if (state.timeoutID) {

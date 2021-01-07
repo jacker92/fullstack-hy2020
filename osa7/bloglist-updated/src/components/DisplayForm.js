@@ -1,9 +1,11 @@
 import React from 'react'
 import Blog from './Blog'
 import PropTypes from 'prop-types'
+import { useSelector } from 'react-redux'
 
-const DisplayForm = ({ user, blogs, logout, setLike, removeBlog }) => {
+const DisplayForm = ({ user, logout, setLike, removeBlog }) => {
 
+  const blogs = useSelector(state => state.blogs)
   const compareOnLikes = (x, y) => {
     if (x.likes < y.likes) {
       return 1
@@ -14,6 +16,7 @@ const DisplayForm = ({ user, blogs, logout, setLike, removeBlog }) => {
     return 0
   }
 
+  console.log(blogs)
   return (
     <div id='blogs'>
       <p><b>{user.username}</b> has logged in</p>
@@ -30,7 +33,6 @@ const DisplayForm = ({ user, blogs, logout, setLike, removeBlog }) => {
 
 DisplayForm.propTypes = {
   user: PropTypes.object.isRequired,
-  blogs: PropTypes.array.isRequired,
   logout: PropTypes.func.isRequired,
   setLike: PropTypes.func.isRequired,
   removeBlog: PropTypes.func.isRequired

@@ -9,6 +9,7 @@ import Notification from './components/Notification'
 import { setSuccess, setError } from './reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
 import './App.css'
+import { initializeBlogs } from './reducers/blogReducer'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -20,7 +21,8 @@ const App = () => {
   useEffect(() => {
     getTokenFromStorage()
     getBlogs()
-  }, [])
+    dispatch(initializeBlogs())
+  }, [dispatch])
 
   const getBlogs = async () => {
     const blogs = await blogService.getAll()
@@ -64,21 +66,6 @@ const App = () => {
     setUser(response)
   }
 
-  const createBlog = async (event, blog) => {
-    console.log(blog)
-    event.preventDefault()
-    try {
-      const result = await blogService.create(blog)
-      dispatch(setSuccess(`A new blog ${result.title} by ${result.author} added`))
-      if (createFormRef.current) {
-        createFormRef.current.toggleVisibility()
-      }
-      setBlogs(blogs.concat(result))
-    } catch (e) {
-      dispatch(setError(e.response.data.error))
-    }
-  }
-
   const setLike = async (blog) => {
     blog.likes += 1
     setBlogs([...blogs])
@@ -98,9 +85,9 @@ const App = () => {
     <div>
       <h2>Blogs</h2>
       <Notification />
-      <DisplayForm user={user} blogs={blogs} logout={logout} setLike={setLike} removeBlog={removeBlog} />
+      <DisplayForm user={user} logout={logout} setLike={setLike} removeBlog={removeBlog} />
       <Togglable buttonLabel='Create new blog' ref={createFormRef}>
-        <CreateNewForm createNew={createBlog} />
+        <CreateNewForm />
       </Togglable>
     </div>
   )
