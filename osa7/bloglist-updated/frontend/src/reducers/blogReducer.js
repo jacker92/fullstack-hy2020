@@ -3,21 +3,22 @@ import { setSuccess, setError } from './notificationReducer'
 
 const reducer = (state = [], action) => {
   switch (action.type) {
-  case 'ADD_BLOG':
-    return state.concat(action.data)
-  case 'REMOVE_BLOG':
-    return state.filter(x => x.id !== action.data.id)
-  case 'INIT_BLOGS':
-    return action.data
-  case 'LIKE_BLOG':
-    return state.map(x => {
-      if (x.id === action.data.id) {
-        return action.data
-      }
-      return x
-    })
-  default:
-    return state
+    case 'ADD_BLOG':
+      return state.concat(action.data)
+    case 'REMOVE_BLOG':
+      return state.filter(x => x.id !== action.data.id)
+    case 'INIT_BLOGS':
+      return action.data
+    case 'LIKE_BLOG':
+    case 'ADD_COMMENT':
+      return state.map(x => {
+        if (x.id === action.data.id) {
+          return action.data
+        }
+        return x
+      })
+    default:
+      return state
   }
 }
 
@@ -29,7 +30,7 @@ export const addBlog = (blog) => {
       dispatch(
         {
           type: 'ADD_BLOG',
-          data:response
+          data: response
         })
       dispatch(setSuccess(`A new blog ${blog.title} by ${blog.author} added`))
 
@@ -66,6 +67,13 @@ export const initializeBlogs = () => {
   return async dispatch => {
     const anecdotes = await blogService.getAll()
     dispatch({ type: 'INIT_BLOGS', data: anecdotes })
+  }
+}
+
+export const addComment = (blog, message) => {
+  return async dispatch => {
+    const response = await blogService.addComment(blog, message)
+    dispatch({ type: 'ADD_COMMENT', data: response })
   }
 }
 

@@ -1,20 +1,22 @@
 import React from 'react'
+import AddComment from './AddComment'
 
 const Comments = ({ blog }) => {
-    if (!blog.comments || blog.comments.length == 0) {
-      return null
-    }
-  
-    return (
-      <div>
-        <h4>Comments</h4>
+  const hasComments = blog.comments && blog.comments.length !== 0
+
+  return (
+    <div>
+      <h4>Comments</h4>
+      <AddComment blog={blog}/>
+      {hasComments ?
         <ul>
           {blog.comments.map(comment => (
-            <li key={comment.id}>{comment.message}</li>
+            <li key={comment._id}>{comment.message}</li>
           ))}
         </ul>
-      </div>
-    )
-  }
+        : null}
+    </div>
+  )
+}
 
-  export default Comments
+export default Comments

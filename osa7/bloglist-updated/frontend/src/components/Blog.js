@@ -20,6 +20,10 @@ const Blog = () => {
     marginBottom: 5
   }
 
+  if(!blog) {
+    return null
+  }
+
   const removeButton = () => {
     if (credential && blog.user && credential.id.toString() === blog.user.toString()) {
       return (
