@@ -2,6 +2,7 @@ import React from 'react'
 import { removeBlog, setLike } from './../reducers/blogReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import Comments from './Comments'
 
 const Blog = () => {
   const dispatch = useDispatch()
@@ -36,12 +37,13 @@ const Blog = () => {
           likes {blog.likes}
       <button
         onClick={() => dispatch(setLike(blog))}>
-          Like
+        Like
       </button>
       <br />
       {blog.author}
       <br />
       {removeButton()}
+      <Comments blog={blog} />
     </div>
   )
 }

@@ -22,6 +22,14 @@ blogsRouter.get('/:id', async (request, response) => {
 blogsRouter.put('/:id', async (request, response) => {
     const body = request.body
 
+    if (!request.token) {
+        return response.status(401).json({ error: 'token missing' })
+    }
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    if (!decodedToken.id) {
+        return response.status(401).json({ error: 'token invalid' })
+    }
+
     const blog = {
         title: body.title,
         author: body.author,
@@ -36,6 +44,20 @@ blogsRouter.put('/:id', async (request, response) => {
     } else {
         response.status(404).end()
     }
+})
+
+blogsRouter.post('/:id/comments', async (request, response) => {
+    console.log('Pasted id: ', request.params.id)
+    console.log('Pasted body', request.body)
+
+    const blog = await Blog.findById(request.params.id)
+
+    console.log('Result from findByID', blog)
+
+    blog.comments = [...blog.comments, request.body]
+    const result = await blog.save()
+
+    response.status(201).json(result.toJSON())
 })
 
 blogsRouter.post('/', async (request, response) => {
