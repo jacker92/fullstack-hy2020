@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import React, { useEffect } from 'react'
 import { loadUsers } from './../reducers/userReducer'
 import { Link } from 'react-router-dom'
+import { Table } from 'react-bootstrap'
 
 const UserStatistics = () => {
   const users = useSelector(state => state.users)
@@ -14,7 +15,7 @@ const UserStatistics = () => {
   return (
     <div>
       <h2>Users</h2>
-      <table>
+      <Table striped>
         <thead>
           <tr>
             <th>Username</th>
@@ -35,7 +36,7 @@ const UserStatistics = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
     </div>
   )
 }

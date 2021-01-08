@@ -3,6 +3,7 @@ import { removeBlog, setLike } from './../reducers/blogReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import Comments from './Comments'
+import { Table, Button } from 'react-bootstrap'
 
 const Blog = () => {
   const dispatch = useDispatch()
@@ -12,43 +13,54 @@ const Blog = () => {
   const id = useParams().id
   const blog = blogs.find(n => n.id === id)
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
-
-  if(!blog) {
+  if (!blog) {
     return null
   }
 
   const removeButton = () => {
     if (credential && blog.user && credential.id.toString() === blog.user.toString()) {
       return (
-        <button onClick={() => dispatch(removeBlog(blog))}>Remove blog</button>
+        <td>
+          <Button onClick={() => dispatch(removeBlog(blog))} variant="danger">
+            Remove blog
+        </Button>
+        </td>
       )
     }
   }
 
   return (
-    <div style={blogStyle}>
-      <p>
-        <b>{blog.title}</b>
-      </p>
-      {blog.url}<br />
-          likes {blog.likes}
-      <button
-        onClick={() => dispatch(setLike(blog))}>
-        Like
-      </button>
-      <br />
-      {blog.author}
-      <br />
-      {removeButton()}
+    <div>
+      <Table striped>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Url</th>
+            <th>Likes</th>
+            <th>Author</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{blog.title}</td>
+            <td>{blog.url}</td>
+            <td>
+              <b>{blog.likes}</b>
+            </td>
+            <td>{blog.author}</td>
+            <td>
+              <Button onClick={() => dispatch(setLike(blog))} variant="info">
+                Like
+              </Button>
+            </td>
+            {removeButton()}
+          </tr>
+        </tbody>
+        <br />
+      </Table>
       <Comments blog={blog} />
     </div>
+
   )
 }
 export default Blog

@@ -51,8 +51,12 @@ export const initializeUser = () => {
     const token = window.localStorage.getItem('token')
     if (token) {
       const asJson = JSON.parse(token)
+      dispatch({
+        type: 'SET_USER', data: {
+          token: asJson
+        }
+      })
       const response = await userService.getByUserName(asJson.username)
-      console.log('Got response', response)
       blogs.setToken(asJson)
       dispatch({
         type: 'SET_USER', data: {

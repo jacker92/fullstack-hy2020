@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { login } from '../reducers/credentialReducer'
+import { Form, Button } from 'react-bootstrap'
 
 const LoginForm = () => {
   const [username, setUsername] = useState('')
@@ -14,29 +15,15 @@ const LoginForm = () => {
   return (
     <div>
       <h2>Log in to application</h2>
-      <form className="login" onSubmit={handleLogin}>
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <p>Username:</p>
-              </td>
-              <td>
-                <input type="text" name="username" onChange={({ target }) => setUsername(target.value)} />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <p>Password:</p>
-              </td>
-              <td>
-                <input type="password" name="password" onChange={({ target }) => setPassword(target.value)} />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <input id="login-button" type="submit" value="Submit" />
-      </form>
+      <Form className="login" onSubmit={handleLogin}>
+        <Form.Group>
+          <Form.Label>Username:</Form.Label>
+          <Form.Control onChange={(e) => setUsername(e.target.value)} type="text" name="username" />
+          <Form.Label>Password:</Form.Label>
+          <Form.Control onChange={(e) => setPassword(e.target.value)} type="password" name="password" />
+        </Form.Group>
+        <Button variant="primary" type="submit">Login</Button>
+      </Form>
     </div>
   )
 }

@@ -26,7 +26,6 @@ export const addBlog = (blog) => {
   return async dispatch => {
     try {
       const response = await blogService.create(blog)
-      console.log('Created with response', response)
       dispatch(
         {
           type: 'ADD_BLOG',

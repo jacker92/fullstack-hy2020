@@ -1,27 +1,33 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { Table } from 'react-bootstrap'
 
 const UserStatistic = () => {
   const users = useSelector(state => state.users)
   const id = useParams().id
   const user = users.find(n => n.id === id)
 
-
-  if(!user) {
+  if (!user) {
     return null
   }
-  return(
+  return (
     <div>
-      <h3>{user.username}</h3>
-      <h4>Added blogs</h4>
-      <ul>
-        {user.blogs.map(blog => (
-          <li key={blog.id}>
-            {blog.title}
-          </li>
-        ))}
-      </ul>
+      <h4>Blogs added by {user.username}</h4>
+      <Table striped>
+        <thead>
+          <tr>
+            <th>Blog Name</th>
+          </tr>
+        </thead>
+        <tbody>
+          {user.blogs.map(blog => (
+            <tr key={blog.id}>
+              <td>{blog.title}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
     </div>
   )
 }

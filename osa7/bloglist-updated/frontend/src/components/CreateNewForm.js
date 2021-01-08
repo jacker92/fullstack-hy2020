@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { addBlog } from './../reducers/blogReducer'
 import { useDispatch } from 'react-redux'
+import { Form, Button } from 'react-bootstrap'
 
 const CreateNewForm = (props) => {
   const [title, setTitle] = useState()
@@ -25,14 +26,18 @@ const CreateNewForm = (props) => {
   return (
     <div>
       <h2>Create new</h2>
-      <form onSubmit={handleSubmit}>
-        title:<input id='title' type="text" onChange={(e) => setTitle(e.target.value)} ref={titleInput}></input>
-                author:<input id='author' type="text" onChange={(e) => setAuthor(e.target.value)} ref={authorInput}></input>
-                url:<input id='url' type="text" onChange={(e) => setUrl(e.target.value)} ref={urlInput}></input>
-        <input type="submit" />
-      </form>
-    </div >
+      <Form className="createNew" onSubmit={handleSubmit}>
+        <Form.Group>
+          <Form.Label>Title:</Form.Label>
+          <Form.Control onChange={(e) => setTitle(e.target.value)} type="text" name="title" ref={titleInput}/>
+          <Form.Label>Author:</Form.Label>
+          <Form.Control onChange={(e) => setAuthor(e.target.value)} type="text" name="author" ref={authorInput}/>
+          <Form.Label>URL:</Form.Label>
+          <Form.Control onChange={(e) => setUrl(e.target.value)} type="text" name="url" ref={urlInput}/>
+        </Form.Group>
+        <Button variant="primary" type="submit">Create</Button>
+      </Form>
+    </div>
   )
 }
-
 export default CreateNewForm

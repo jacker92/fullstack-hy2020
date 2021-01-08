@@ -38,7 +38,7 @@ const setNotification = ( message, type) => {
 }
 
 export const setError = (message) => {
-  return setNotification(message, 'error')
+  return setNotification(message, 'danger')
 }
 
 export const setSuccess = (message) => {

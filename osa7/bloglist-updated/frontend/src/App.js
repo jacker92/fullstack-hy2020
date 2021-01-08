@@ -7,7 +7,6 @@ import UserStatistic from './components/UserStatistic'
 import Blogs from './components/Blogs'
 import Blog from './components/Blog'
 import { useDispatch, useSelector } from 'react-redux'
-import './App.css'
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUser } from './reducers/credentialReducer'
 
@@ -27,34 +26,38 @@ const App = () => {
 
   if (!credential.token) {
     return (
-      <div>
+      <>
         <Notification />
-        <LoginForm/>
-      </div>
+        <div className="container">
+          <LoginForm />
+        </div>
+      </>
     )
   }
 
   return (
     <Router>
-      <NavigationMenu/>
+      <NavigationMenu />
       <Notification />
-      <Switch>
-        <Route path="/blogs/:id">
-          <Blog />
-        </Route>
-        <Route path="/blogs">
-          <Blogs/>
-        </Route>
-        <Route path="/users/:id">
-          <UserStatistic />
-        </Route>
-        <Route path="/users">
-          <UserStatistics />
-        </Route>
-        <Route path="/">
-          <Blogs />
-        </Route>
-      </Switch>
+      <div className="container" style={{paddingBottom: '50px'}}>
+        <Switch>
+          <Route path="/blogs/:id">
+            <Blog />
+          </Route>
+          <Route path="/blogs">
+            <Blogs />
+          </Route>
+          <Route path="/users/:id">
+            <UserStatistic />
+          </Route>
+          <Route path="/users">
+            <UserStatistics />
+          </Route>
+          <Route path="/">
+            <Blogs />
+          </Route>
+        </Switch>
+      </div>
     </Router>
   )
 }

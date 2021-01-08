@@ -1,18 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { Table } from 'react-bootstrap'
 
 const DisplayForm = () => {
 
   const blogs = useSelector(state => state.blogs)
-
-  const onMouseEnterParagraph = (e) => {
-    e.target.style.color = '#4e5951'
-  }
-
-  const onMouseLeaveParagraph = (e) => {
-    e.target.style.color = 'black'
-  }
 
   const compareOnLikes = (x, y) => {
     if (x.likes < y.likes) {
@@ -26,20 +19,30 @@ const DisplayForm = () => {
 
   return (
     <div id='blogs'>
-      {blogs
-        .sort(compareOnLikes)
-        .map(blog =>
-          <Link key={blog.id} to={`/blogs/${blog.id}`}>
-            <div className='blog'>
-              <p
-                onMouseEnter={onMouseEnterParagraph}
-                onMouseLeave={onMouseLeaveParagraph}>
-                {blog.title} {blog.author}
-              </p>
-            </div>
-          </Link>
-
-        )}
+      <Table striped>
+      <thead>
+          <tr>
+            <th>Blog</th>
+            <th>Author</th>
+          </tr>
+        </thead>
+        <tbody>
+          {blogs
+            .sort(compareOnLikes)
+            .map(blog =>
+              <tr key={blog.id} className='blog'>
+                <td>
+                  <Link key={blog.id} to={`/blogs/${blog.id}`}>
+                    {blog.title}
+                  </Link>
+                </td>
+                <td>
+                  {blog.author}
+                </td>
+              </tr>
+            )}
+        </tbody>
+      </Table>
     </div>
   )
 }
