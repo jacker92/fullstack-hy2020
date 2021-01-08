@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import LoginForm from './components/LoginForm'
 import DisplayForm from './components/DisplayForm'
 import CreateNewForm from './components/CreateNewForm'
 import Togglable from './components/Togglable'
 import Notification from './components/Notification'
+import UserStatistics from './components/UserStatistics'
 import { useDispatch, useSelector } from 'react-redux'
 import './App.css'
 import { initializeBlogs } from './reducers/blogReducer'
@@ -32,6 +33,7 @@ const App = () => {
       <h2>Blogs</h2>
       <Notification />
       <DisplayForm />
+      <UserStatistics />
       <Togglable buttonLabel='Create new blog'>
         <CreateNewForm />
       </Togglable>

@@ -6,4 +6,9 @@ const getByUserName = async (username) => {
   return response.data.find(x => x.username === username)
 }
 
-export default { getByUserName }
+const getAll = async () => {
+  const response = await axios.get(baseUrl)
+  return response.data
+}
+
+export default { getByUserName, getAll }
