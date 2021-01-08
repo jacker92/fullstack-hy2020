@@ -1,14 +1,18 @@
 import React from 'react'
-import Blog from './Blog'
-import { useDispatch, useSelector } from 'react-redux'
-import { logout } from '../reducers/credentialReducer'
+import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const DisplayForm = () => {
 
   const blogs = useSelector(state => state.blogs)
-  const credential = useSelector(state => state.credential)
 
-  const dispatch = useDispatch()
+  const onMouseEnterParagraph = (e) => {
+    e.target.style.color = '#4e5951'
+  }
+
+  const onMouseLeaveParagraph = (e) => {
+    e.target.style.color = 'black'
+  }
 
   const compareOnLikes = (x, y) => {
     if (x.likes < y.likes) {
@@ -20,19 +24,24 @@ const DisplayForm = () => {
     return 0
   }
 
-  console.log('Blogs content is', blogs)
   return (
     <div id='blogs'>
-      <p><b>{credential.username}</b> has logged in</p>
-      <button onClick={() => dispatch(logout())}>Logout</button>
       {blogs
         .sort(compareOnLikes)
         .map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Link key={blog.id} to={`/blogs/${blog.id}`}>
+            <div className='blog'>
+              <p
+                onMouseEnter={onMouseEnterParagraph}
+                onMouseLeave={onMouseLeaveParagraph}>
+                {blog.title} {blog.author}
+              </p>
+            </div>
+          </Link>
+
         )}
     </div>
   )
-
 }
 
 export default DisplayForm

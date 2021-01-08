@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import React, { useEffect } from 'react'
 import { loadUsers } from './../reducers/userReducer'
-import UserStatistic from './UserStatistic'
 import { Link } from 'react-router-dom'
 
 const UserStatistics = () => {
@@ -27,14 +26,13 @@ const UserStatistics = () => {
             <tr key={x.username}>
               <td>
                 <Link to={`/users/${x.id}`} >
-                  <td>{x.username}</td>
+                  {x.username}
                 </Link>
               </td>
               <td>
                 {x.blogs.length}
               </td>
             </tr>
-
           ))}
         </tbody>
       </table>

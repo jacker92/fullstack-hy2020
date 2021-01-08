@@ -60,3 +60,7 @@ input {
   padding: 10px;
   margin-bottom: 10px; 
 }
+
+button {
+  margin:5px;
+}
