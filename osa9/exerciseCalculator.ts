@@ -37,8 +37,8 @@ const calculateRating = (average: number, target: number): ExerciseCalculationRe
     }
 }
 
-const calculateExercise = (input: Array<number>, targetAmount: number): ExerciseCalculationResult => {
-    const average = input.reduce((a,b) => a + b, 0) / input.length 
+const calculateExercises = (input: Array<number>, targetAmount: number): ExerciseCalculationResult => {
+    const average = input.reduce((a, b) => a + b, 0) / input.length
     const resultRating = calculateRating(average, targetAmount)
 
     return {
@@ -52,7 +52,16 @@ const calculateExercise = (input: Array<number>, targetAmount: number): Exercise
     }
 }
 
-const testData = [3, 0, 2, 4.5, 0, 3, 1]
-const result = calculateExercise(testData, 2)
+if (process.argv.length < 4) throw new Error('Not enough arguments');
+
+const spliced = process.argv.splice(2)
+spliced.forEach(x => {
+    if (isNaN(Number(x))) {
+        throw new Error('All Provided values were not numbers!' + x);
+    }
+})
+
+const target = Number(spliced.shift())
+const result = calculateExercises(spliced.map(Number), target)
 
 console.log(result)

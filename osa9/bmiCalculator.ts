@@ -14,4 +14,11 @@ const calculateBmi = (heightInCentimeters: number, weightInKilograms: number): S
     return "Extremely Obese";
 }
 
-console.log(calculateBmi(180, 74))
+if (process.argv.length < 4) throw new Error('Not enough arguments');
+if (process.argv.length > 4) throw new Error('Too many arguments');
+
+if (!isNaN(Number(process.argv[2])) && !isNaN(Number(process.argv[3]))) {
+    console.log(calculateBmi(Number(process.argv[2]), Number(process.argv[3])))
+} else {
+    throw new Error('Provided values were not numbers!');
+}
