@@ -48,7 +48,7 @@ const SetBirthyear = ({ authors }) => {
             type='number'
             value={born}
             onChange={({ target }) => setBorn(target.value)}
-                    />
+            required        />
                 </div>
                 <button type='submit'>Update author</button>
             </form>
