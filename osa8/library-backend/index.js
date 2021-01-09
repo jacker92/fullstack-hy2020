@@ -6,6 +6,8 @@ const Book = require('./models/Book')
 const User = require('./models/User')
 const dotenv = require('dotenv')
 dotenv.config()
+const { PubSub } = require('apollo-server')
+const pubsub = new PubSub()
 
 const MONGODB_URI = process.env.MONGODB_URI
 console.log('connecting to', MONGODB_URI)
@@ -27,6 +29,9 @@ type Book {
     genres: [String]!
   }
 
+  type Subscription {
+    bookAdded: Book!
+  }    
 type Query {
       bookCount: Int!
       authorCount: Int!
@@ -109,7 +114,6 @@ const resolvers = {
     Author: {
         bookCount: async (root) => {
             const books = await Book.find({}).populate('author')
-            console.log('In BookCount', books)
             if (!books) {
                 return 0
             }
@@ -138,6 +142,7 @@ const resolvers = {
             const { author, ...withoutAuthor } = args
             const book = new Book({ ...withoutAuthor, author: associatedAuthor })
 
+            pubsub.publish('BOOK_ADDED', { bookAdded: book })
             try {
                 return await book.save()
             } catch (error) {
@@ -191,7 +196,12 @@ const resolvers = {
 
             return { value: jwt.sign(userForToken, process.env.SECRET_TOKEN) }
         },
-    }
+    },
+    Subscription: {
+        bookAdded: {
+            subscribe: () => pubsub.asyncIterator(['BOOK_ADDED'])
+        },
+    },
 }
 
 const server = new ApolloServer({

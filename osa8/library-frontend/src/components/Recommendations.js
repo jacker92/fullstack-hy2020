@@ -5,7 +5,6 @@ import { ALL_BOOKS } from './../queries'
 const Recommendations = ({ show, user }) => {
 
     const result = useQuery(ALL_BOOKS, {
-        pollInterval: 5000,
         variables: { genre: user ? user.favoriteGenre : null }
     })
 
