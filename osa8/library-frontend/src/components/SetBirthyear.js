@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { gql, useMutation } from '@apollo/client'
+import {useMutation } from '@apollo/client'
 import Select from 'react-select';
+import {EDIT_AUTHOR} from './../queries'
 
 const SetBirthyear = ({ authors }) => {
     const options = authors.map(x => {
@@ -12,17 +13,6 @@ const SetBirthyear = ({ authors }) => {
 
     const [born, setBorn] = useState('')
     const [selectedAuthor, setSelectedAuthor] = useState(options[0])
-
-    const EDIT_AUTHOR = gql`
-    mutation editAuthor($name: String!, $setBornTo: Int!) {
-      editAuthor(
-        name: $name,
-        setBornTo: $setBornTo
-      ) {
-        name
-      }
-    }
-  `
 
     const [editAuthor] = useMutation(EDIT_AUTHOR)
 

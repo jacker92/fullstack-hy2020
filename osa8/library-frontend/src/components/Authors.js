@@ -1,17 +1,9 @@
 import React from 'react'
-import { gql, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import SetBirthyear from './SetBirthyear'
+import {ALL_AUTHORS} from './../queries'
 
 const Authors = (props) => {
-  const ALL_AUTHORS = gql`
-  query {
-    allAuthors  {
-      name
-      born
-      bookCount
-    }
-  }
-  `
 
   const result = useQuery(ALL_AUTHORS, {
     pollInterval: 5000
@@ -53,7 +45,13 @@ const Authors = (props) => {
           )}
         </tbody>
       </table>
+      {props.loggedIn
+      ?
       <SetBirthyear authors={authors}/>
+      :
+      null
+    }
+  
     </div>
   )
 }
