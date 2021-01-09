@@ -100,24 +100,28 @@ const resolvers = {
             }
             return filtered
         },
-        allAuthors: async () => await Author.find({}) || [],
+        allAuthors: async () => {
+            const authors = await Author.find({})
+            const books = await Book.find({}).populate('author')
+            const combined = authors.map(x => {
+                x.books = books.filter(book => book.author.name === x.name)
+                return x
+            })
+            return combined
+        },
         me: (root, args, context) => {
             return context.currentUser
         },
         allGenres: async () => {
             const genres = await Book.find({}).select('genres -_id')
-            return genres.reduce((a,b) => {
+            return genres.reduce((a, b) => {
                 return a.concat(b.genres.filter((item) => a.indexOf(item) === -1))
             }, [])
         }
     },
     Author: {
         bookCount: async (root) => {
-            const books = await Book.find({}).populate('author')
-            if (!books) {
-                return 0
-            }
-            return books.filter((book) => book.author.name === root.name).length
+            return root.books.length
         }
     },
     Mutation: {
