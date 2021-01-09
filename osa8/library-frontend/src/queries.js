@@ -57,3 +57,11 @@ mutation editAuthor($name: String!, $setBornTo: Int!) {
   }
 }
 `
+
+export const ME = gql`
+query {
+  me {
+    username
+    favoriteGenre
+  }
+} `

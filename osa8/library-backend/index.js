@@ -56,6 +56,7 @@ type Mutation {
       ) : Author
       createUser(
         username: String!
+        favoriteGenre: String!
       ): User
       login(
         username: String!
@@ -66,6 +67,7 @@ type Mutation {
 type User {
     username: String!
     id: ID!
+    favoriteGenre: String!
 }
 
 type Token {
@@ -132,6 +134,7 @@ const resolvers = {
                 }
             }
 
+            // eslint-disable-next-line no-unused-vars
             const { author, ...withoutAuthor } = args
             const book = new Book({ ...withoutAuthor, author: associatedAuthor })
 
@@ -165,7 +168,7 @@ const resolvers = {
             }
         },
         createUser: (root, args) => {
-            const user = new User({ username: args.username })
+            const user = new User({ username: args.username, favoriteGenre: args.favoriteGenre })
 
             return user.save()
                 .catch(error => {
