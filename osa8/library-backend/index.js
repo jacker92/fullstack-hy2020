@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, gql, UserInputError } = require('apollo-server')
 const mongoose = require('mongoose')
 const Author = require('./models/Author')
 const Book = require('./models/Book')
@@ -6,7 +6,6 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 const MONGODB_URI = process.env.MONGODB_URI
-
 console.log('connecting to', MONGODB_URI)
 
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
@@ -53,7 +52,6 @@ type Book {
       ) : Author
   }
 `
-
 const resolvers = {
     Query: {
         bookCount: () => Book.collection.countDocuments(),
@@ -92,17 +90,43 @@ const resolvers = {
 
             if (!associatedAuthor) {
                 associatedAuthor = new Author({ name: args.author })
-                await associatedAuthor.save()
+                try {
+                    await associatedAuthor.save()
+                } catch (error) {
+                    throw new UserInputError(error.message, {
+                        invalidArgs: args,
+                    })
+                }
             }
 
             const { author, ...withoutAuthor } = args
             const book = new Book({ ...withoutAuthor, author: associatedAuthor })
-            await book.save()
+
+            try {
+                await book.save()
+            } catch (error) {
+                throw new UserInputError(error.message, {
+                    invalidArgs: args,
+                })
+            }
+
         },
         editAuthor: async (root, args) => {
+            if (!args.setBornTo) {
+                throw new UserInputError('Cannot set null value to author\'s birth year', {
+                    invalidArgs: args,
+                })
+            }
             const author = await Author.findOne({ name: args.name })
             author.born = args.setBornTo
-            await author.save()
+
+            try {
+                await author.save()
+            } catch (error) {
+                throw new UserInputError(error.message, {
+                    invalidArgs: args,
+                })
+            }
         }
     }
 }
