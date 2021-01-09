@@ -33,6 +33,7 @@ type Query {
       allBooks(author: String, genre: String): [Book!]!
       allAuthors: [Author!]!
       me: User
+      allGenres: [String]
   }
 
 type Author {
@@ -76,6 +77,7 @@ const resolvers = {
         bookCount: () => Book.collection.countDocuments(),
         authorCount: () => Author.collection.countDocuments(),
         allBooks: async (root, args) => {
+            console.log('In All Books!', root, args)
             let filtered = await Book.find({}).populate('author')
 
             if (!filtered) {
@@ -94,6 +96,12 @@ const resolvers = {
         allAuthors: async () => await Author.find({}) || [],
         me: (root, args, context) => {
             return context.currentUser
+        },
+        allGenres: async () => {
+            const genres = await Book.find({}).select('genres -_id')
+            return genres.reduce((a,b) => {
+                return a.concat(b.genres.filter((item) => a.indexOf(item) === -1))
+            }, [])
         }
     },
     Author: {
@@ -169,7 +177,7 @@ const resolvers = {
         login: async (root, args) => {
             const user = await User.findOne({ username: args.username })
 
-            if ( !user || args.password !== 'secret' ) {
+            if (!user || args.password !== 'secret') {
                 throw new UserInputError('wrong credentials')
             }
 
