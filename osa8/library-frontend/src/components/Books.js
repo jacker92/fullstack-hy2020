@@ -12,7 +12,9 @@ const Books = (props) => {
   }
   `
 
-  const result = useQuery(ALL_BOOKS)
+  const result = useQuery(ALL_BOOKS, {
+    pollInterval: 5000
+  })
 
   if (!props.show) {
     return null
