@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import {useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import Select from 'react-select';
-import {ALL_AUTHORS, EDIT_AUTHOR} from './../queries'
+import { ALL_AUTHORS, EDIT_AUTHOR } from './../queries'
 
-const SetBirthyear = ( props ) => {
+const SetBirthyear = (props) => {
     const options = props.authors.map(x => {
         return {
             value: x.name,
@@ -17,20 +17,19 @@ const SetBirthyear = ( props ) => {
     const [editAuthor] = useMutation(EDIT_AUTHOR, {
         update: (store, response) => {
             const dataInStore = store.readQuery({ query: ALL_AUTHORS })
-
             store.writeQuery({
-              query: ALL_AUTHORS,
-              data: {
-                ...dataInStore,
-                allAuthors: dataInStore.allAuthors.map(x => {
-                    if(x.name === response.data.editAuthor.name) {
-                        return response.data.editAuthor
-                    }
-                    return x
-                })
-              }
+                query: ALL_AUTHORS,
+                data: {
+                    ...dataInStore,
+                    allAuthors: dataInStore.allAuthors.map(x => {
+                        if (x.name === response.data.editAuthor.name) {
+                            return response.data.editAuthor
+                        }
+                        return x
+                    })
+                }
             })
-          }
+        }
     })
 
     const submit = async (event) => {
@@ -52,10 +51,10 @@ const SetBirthyear = ( props ) => {
                 <div>
                     born
             <input
-            type='number'
-            value={born}
-            onChange={({ target }) => setBorn(target.value)}
-            required        />
+                        type='number'
+                        value={born}
+                        onChange={({ target }) => setBorn(target.value)}
+                        required />
                 </div>
                 <button type='submit'>Update author</button>
             </form>

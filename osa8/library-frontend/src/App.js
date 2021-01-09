@@ -4,8 +4,8 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 import Recommendations from './components/Recommendations'
-import { useApolloClient, useQuery,useMutation, useSubscription,} from '@apollo/client';
-import { ME, BOOK_ADDED } from './queries'
+import { useApolloClient, useQuery, useMutation, useSubscription, } from '@apollo/client';
+import { ME, BOOK_ADDED, ALL_BOOKS } from './queries'
 
 const App = () => {
   const [page, setPage] = useState('authors')
@@ -24,7 +24,6 @@ const App = () => {
   useEffect(() => {
     if (token) {
       setPage('authors')
-
     }
   }, [token]) // eslint-disable-line
 
@@ -37,9 +36,32 @@ const App = () => {
 
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
-      alert(JSON.stringify(subscriptionData))
+      console.log(subscriptionData)
+      const addedBook = subscriptionData.data.bookAdded
+      console.log(`${addedBook.title} added`)
+      updateCacheWith(addedBook)
     }
   })
+
+  const updateCacheWith = (addedBook) => {
+
+    const includedIn = (set, object) =>
+      set.map(p => p.title).includes(object.title)
+
+    const dataInStore = client.readQuery({
+      query: ALL_BOOKS,
+      variables: { genre: null }
+    })
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: { allBooks: dataInStore.allBooks.concat(addedBook) },
+        variables: {
+          genre: null
+        }
+      })
+    }
+  }
 
   return (
     <div>
@@ -68,6 +90,7 @@ const App = () => {
 
       <NewBook
         show={page === 'add'}
+        updateCacheWith={updateCacheWith}
       />
 
       <Recommendations

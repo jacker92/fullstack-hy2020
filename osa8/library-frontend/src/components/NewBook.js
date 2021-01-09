@@ -11,19 +11,7 @@ const NewBook = (props) => {
 
   const [createBook] = useMutation(CREATE_BOOK, {
     update: (store, response) => {
-   
-      const dataInStore = store.readQuery({ query: ALL_BOOKS, variables: {genre: null} })
-      console.log("In Create Book", dataInStore,response)
-      store.writeQuery({
-        query: ALL_BOOKS,
-        variables: {
-          genre: null
-        },
-        data: {
-          ...dataInStore,
-          allBooks: [ ...dataInStore.allBooks, response.data.addBook ]
-        }
-      })
+     props.updateCacheWith(response.data.addBook)
     }
   })
 
