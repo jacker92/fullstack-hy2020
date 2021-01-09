@@ -58,11 +58,15 @@ const resolvers = {
     Query: {
         bookCount: () => Book.collection.countDocuments(),
         authorCount: () => Author.collection.countDocuments(),
-        allBooks: (root, args) => {
-            let filtered = Book.find({})
+        allBooks: async (root, args) => {
+            let filtered = await Book.find({}).populate('author')
+
+            if (!filtered) {
+                return null
+            }
 
             if (args.author) {
-                filtered = filtered.filter(book => book.author === args.author)
+                filtered = filtered.filter(book => book.author.name === args.author)
             }
 
             if (args.genre) {
@@ -70,23 +74,27 @@ const resolvers = {
             }
             return filtered
         },
-        allAuthors: () => Author.find({})
+        allAuthors: async () => await Author.find({}) || []
     },
     Author: {
-        bookCount: (root) => Book.find({}).filter((book) => book.author === root.name).length
+        bookCount: async (root) => {
+            const books = await Book.find({}).populate('author')
+            console.log('In BookCount', books)
+            if (!books) {
+                return 0
+            }
+            return books.filter((book) => book.author.name === root.name).length
+        }
     },
     Mutation: {
         addBook: async (root, args) => {
-            console.log('In add book', args)
             let associatedAuthor = await Author.findOne({ name: args.author })
 
-            if(!associatedAuthor) {
-                console.log('No author found!')
+            if (!associatedAuthor) {
                 associatedAuthor = new Author({ name: args.author })
                 await associatedAuthor.save()
             }
 
-            console.log('AssociatedAuthor',associatedAuthor)
             const { author, ...withoutAuthor } = args
             const book = new Book({ ...withoutAuthor, author: associatedAuthor })
             await book.save()
@@ -98,7 +106,6 @@ const resolvers = {
         }
     }
 }
-
 
 const server = new ApolloServer({
     typeDefs,

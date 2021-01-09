@@ -24,6 +24,8 @@ const Authors = (props) => {
   if (result.loading) {
     return <div>loading...</div>
   }
+
+  console.log(result)
   const authors = result.data.allAuthors
 
   return (
@@ -32,7 +34,9 @@ const Authors = (props) => {
       <table>
         <tbody>
           <tr>
-            <th></th>
+            <th>
+              author
+            </th>
             <th>
               born
             </th>
