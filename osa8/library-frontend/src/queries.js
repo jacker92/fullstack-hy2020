@@ -43,6 +43,11 @@ query ($genre: String) {
       genres: $genres
     ) {
       title
+      published
+      genres
+      author {
+        name
+      }
     }
   }
 `
@@ -54,6 +59,8 @@ mutation editAuthor($name: String!, $setBornTo: Int!) {
     setBornTo: $setBornTo
   ) {
     name
+    born
+    bookCount
   }
 }
 `

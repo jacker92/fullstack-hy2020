@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import {useMutation } from '@apollo/client'
 import Select from 'react-select';
-import {EDIT_AUTHOR} from './../queries'
+import {ALL_AUTHORS, EDIT_AUTHOR} from './../queries'
 
-const SetBirthyear = ({ authors }) => {
-    const options = authors.map(x => {
+const SetBirthyear = ( props ) => {
+    const options = props.authors.map(x => {
         return {
             value: x.name,
             label: x.name
@@ -14,7 +14,24 @@ const SetBirthyear = ({ authors }) => {
     const [born, setBorn] = useState('')
     const [selectedAuthor, setSelectedAuthor] = useState(options[0])
 
-    const [editAuthor] = useMutation(EDIT_AUTHOR)
+    const [editAuthor] = useMutation(EDIT_AUTHOR, {
+        update: (store, response) => {
+            const dataInStore = store.readQuery({ query: ALL_AUTHORS })
+
+            store.writeQuery({
+              query: ALL_AUTHORS,
+              data: {
+                ...dataInStore,
+                allAuthors: dataInStore.allAuthors.map(x => {
+                    if(x.name === response.data.editAuthor.name) {
+                        return response.data.editAuthor
+                    }
+                    return x
+                })
+              }
+            })
+          }
+    })
 
     const submit = async (event) => {
         event.preventDefault()

@@ -1,18 +1,15 @@
-import React, { useState } from 'react'
-import { useLazyQuery, useQuery } from '@apollo/client'
+import React, { useEffect, useState } from 'react'
+import { useQuery } from '@apollo/client'
 import { ALL_BOOKS, ALL_GENRES } from './../queries'
 import GenreFilter from './GenreFilter'
 const Books = (props) => {
   const [filter, setFilter] = useState(null)
 
   const result = useQuery(ALL_BOOKS, {
-    pollInterval: 5000,
     variables: {genre: filter}
   })
 
-  const genreResult = useQuery(ALL_GENRES, {
-    pollInterval: 5000
-  })
+  const genreResult = useQuery(ALL_GENRES)
 
   if (!props.show) {
     return null

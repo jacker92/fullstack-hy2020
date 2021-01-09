@@ -139,7 +139,7 @@ const resolvers = {
             const book = new Book({ ...withoutAuthor, author: associatedAuthor })
 
             try {
-                await book.save()
+                return await book.save()
             } catch (error) {
                 throw new UserInputError(error.message, {
                     invalidArgs: args,
@@ -160,7 +160,7 @@ const resolvers = {
             author.born = args.setBornTo
 
             try {
-                await author.save()
+                return await author.save()
             } catch (error) {
                 throw new UserInputError(error.message, {
                     invalidArgs: args,
