@@ -1,5 +1,6 @@
 import React from 'react'
 import { gql, useQuery } from '@apollo/client'
+import SetBirthyear from './SetBirthyear'
 
 const Authors = (props) => {
   const ALL_AUTHORS = gql`
@@ -12,7 +13,9 @@ const Authors = (props) => {
   }
   `
 
-  const result = useQuery(ALL_AUTHORS)
+  const result = useQuery(ALL_AUTHORS, {
+    pollInterval: 5000
+  })
 
   if (!props.show) {
     return null
@@ -46,9 +49,8 @@ const Authors = (props) => {
           )}
         </tbody>
       </table>
-
+      <SetBirthyear />
     </div>
   )
 }
-
 export default Authors
