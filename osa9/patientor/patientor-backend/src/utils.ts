@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Gender, NewPatientEntry } from './types';
+import { Entry, Gender, NewPatientEntry } from './types';
 
 const toNewPatientEntry = (entry: any): NewPatientEntry => {
     return {
@@ -10,10 +10,16 @@ const toNewPatientEntry = (entry: any): NewPatientEntry => {
         ssn: parseSSN(entry.ssn),
         gender: parseGender(entry.gender),
         occupation: parseOccupation(entry.occupation),
-        entries: []
+        entries: parseEntries(entry.entries)
     };
 };
 
+const parseEntries = (entries: Entry[]): Entry[] => {
+    if (!entries) {
+        return [];
+    }
+    return entries;
+};
 const parseName = (name: string): string => {
     validate(name, 'Name');
     return name.trim();

@@ -1,10 +1,12 @@
 import { NewPatientEntry, Patient, PublicPatientResponse, SinglePatientResponse } from '../types';
-import patientsJSON from '../data/patients.json';
+import pats from '../data/patients';
 import { v4 as uuidv4 } from 'uuid';
 import toNewPatientEntry from '../utils';
 
-const patients: Patient[] = patientsJSON.map(obj => {
+const patients: Patient[] = pats.map(obj => {
+    console.log(pats);
     const object = toNewPatientEntry(obj) as Patient;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     object.id = obj.id;
     return object;
 });
@@ -32,6 +34,7 @@ const addPatient = (patient: NewPatientEntry): PublicPatientResponse => {
 
 const findByID = (id: string): SinglePatientResponse | undefined => {
     const result = patients.find(x => x.id === id);
+    console.log(patients);
     if (!result) {
         return result;
     }
