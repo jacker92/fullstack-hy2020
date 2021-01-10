@@ -37,7 +37,7 @@ const calculateRating = (average: number, target: number): ExerciseCalculationRe
     };
 };
 
-const calculateExercises = (input: Array<number>, targetAmount: number): ExerciseCalculationResult => {
+export const calculateExercises = (input: Array<number>, targetAmount: number): ExerciseCalculationResult => {
     const average = input.reduce((a, b) => a + b, 0) / input.length;
     const resultRating = calculateRating(average, targetAmount);
 
@@ -52,16 +52,24 @@ const calculateExercises = (input: Array<number>, targetAmount: number): Exercis
     };
 };
 
-if (process.argv.length < 4) throw new Error('Not enough arguments');
+const validateArgs = () => {
+    if (process.argv.length < 4) throw new Error('Not enough arguments');
 
-const spliced = process.argv.splice(2);
-spliced.forEach(x => {
-    if (isNaN(Number(x))) {
-        throw new Error('All Provided values were not numbers!');
-    }
-});
+    const spliced = process.argv.splice(2);
+    spliced.forEach(x => {
+        if (isNaN(Number(x))) {
+            throw new Error('All Provided values were not numbers!');
+        }
+    });
 
-const target = Number(spliced.shift());
-const result = calculateExercises(spliced.map(Number), target);
+    const target = Number(spliced.shift());
+    const result = calculateExercises(spliced.map(Number), target);
 
-console.log(result);
+    console.log(result);
+};
+
+const wasCalledFromCommandLine = !module.parent;
+
+if (wasCalledFromCommandLine) {
+    validateArgs();
+}
