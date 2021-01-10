@@ -1,4 +1,9 @@
-const calculateBmi = (heightInCentimeters: number, weightInKilograms: number): String => {
+export const calculateBmi = (heightInCentimeters: number, weightInKilograms: number): String => {
+
+    if (isNaN(Number(heightInCentimeters)) || isNaN(Number(weightInKilograms))) {
+        throw new Error('Provided values were not numbers!');
+    }
+
     const bmi = weightInKilograms / (heightInCentimeters / 100) ** 2
     if (bmi < 18.5) {
         return "Underweight"
@@ -14,11 +19,14 @@ const calculateBmi = (heightInCentimeters: number, weightInKilograms: number): S
     return "Extremely Obese";
 }
 
-if (process.argv.length < 4) throw new Error('Not enough arguments');
-if (process.argv.length > 4) throw new Error('Too many arguments');
+const validateArgs = () => {
+    if (process.argv.length < 4) throw new Error('Not enough arguments');
+    if (process.argv.length > 4) throw new Error('Too many arguments');
+    calculateBmi(Number(process.argv[2]), Number(process.argv[3]))
+}
 
-if (!isNaN(Number(process.argv[2])) && !isNaN(Number(process.argv[3]))) {
-    console.log(calculateBmi(Number(process.argv[2]), Number(process.argv[3])))
-} else {
-    throw new Error('Provided values were not numbers!');
+const wasCalledFromCommandLine = !module.parent
+
+if (wasCalledFromCommandLine) {
+    validateArgs()
 }
