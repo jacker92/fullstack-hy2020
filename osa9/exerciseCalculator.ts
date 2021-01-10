@@ -57,7 +57,7 @@ if (process.argv.length < 4) throw new Error('Not enough arguments');
 const spliced = process.argv.splice(2)
 spliced.forEach(x => {
     if (isNaN(Number(x))) {
-        throw new Error('All Provided values were not numbers!' + x);
+        throw new Error('All Provided values were not numbers!');
     }
 })
 
