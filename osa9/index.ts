@@ -1,5 +1,5 @@
-import express from 'express'
-import { calculateBmi } from './bmiCalculator'
+import express from 'express';
+import { calculateBmi } from './bmiCalculator';
 
 const app = express();
 
@@ -10,17 +10,17 @@ app.get('/hello', (_req, res) => {
 app.get('/bmi', (req, res) => {
 
     if (!req.query.height || !req.query.weight) {
-        return res.send({ error: 'malformatted parameters' }).status(400)
+        return res.send({ error: 'malformatted parameters' }).status(400);
     }
 
-    const height = Number(req.query.height)
-    const weight = Number(req.query.weight)
+    const height = Number(req.query.height);
+    const weight = Number(req.query.weight);
 
     try {
-        const result = calculateBmi(height, weight)
-        return res.send(result)
+        const result = calculateBmi(height, weight);
+        return res.send(result);
     } catch (e) {
-        return res.send(e.message).status(400)
+        return res.send(e).status(400);
     }
 });
 

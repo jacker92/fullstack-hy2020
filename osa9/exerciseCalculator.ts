@@ -3,14 +3,14 @@ interface ExerciseCalculationResult {
     trainingDays: number,
     success: boolean,
     rating: number,
-    ratingDescription: String,
+    ratingDescription: string,
     target: number,
     average: number
 }
 
 interface ExerciseCalculationResultRating {
     rating: number,
-    description: String
+    description: string
 }
 
 const calculateRating = (average: number, target: number): ExerciseCalculationResultRating => {
@@ -18,28 +18,28 @@ const calculateRating = (average: number, target: number): ExerciseCalculationRe
         return {
             rating: 3,
             description: "You exceeded all expectations!"
-        }
+        };
     } else if (average / target > 0.75) {
         return {
             rating: 2,
             description: "You did pretty well!"
-        }
+        };
     }
     else if (average / target > 0.5) {
         return {
             rating: 1,
             description: "You did ok, but new time you will do better!"
-        }
+        };
     }
     return {
         rating: 0,
         description: "Please do better new time!"
-    }
-}
+    };
+};
 
 const calculateExercises = (input: Array<number>, targetAmount: number): ExerciseCalculationResult => {
-    const average = input.reduce((a, b) => a + b, 0) / input.length
-    const resultRating = calculateRating(average, targetAmount)
+    const average = input.reduce((a, b) => a + b, 0) / input.length;
+    const resultRating = calculateRating(average, targetAmount);
 
     return {
         periodLength: input.length,
@@ -49,19 +49,19 @@ const calculateExercises = (input: Array<number>, targetAmount: number): Exercis
         ratingDescription: resultRating.description,
         target: targetAmount,
         average: average
-    }
-}
+    };
+};
 
 if (process.argv.length < 4) throw new Error('Not enough arguments');
 
-const spliced = process.argv.splice(2)
+const spliced = process.argv.splice(2);
 spliced.forEach(x => {
     if (isNaN(Number(x))) {
         throw new Error('All Provided values were not numbers!');
     }
-})
+});
 
-const target = Number(spliced.shift())
-const result = calculateExercises(spliced.map(Number), target)
+const target = Number(spliced.shift());
+const result = calculateExercises(spliced.map(Number), target);
 
-console.log(result)
+console.log(result);
