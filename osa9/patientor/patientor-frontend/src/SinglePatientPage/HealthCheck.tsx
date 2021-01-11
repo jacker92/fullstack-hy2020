@@ -1,4 +1,5 @@
 import React from "react";
+import { Icon } from "semantic-ui-react";
 import { useStateValue } from "../state";
 import { HealthCheckEntry } from "../types";
 
