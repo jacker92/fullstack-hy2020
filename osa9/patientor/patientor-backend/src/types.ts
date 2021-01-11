@@ -5,7 +5,8 @@ export interface BaseEntry {
     date: string,
     specialist: string,
     description: string,
-    type: string
+    type: string,
+    diagnosisCodes?: string[]
 }
 
 export interface Diagnose {
@@ -34,13 +35,11 @@ export interface OccupationalHealthCareEntry extends BaseEntry {
     type: "OccupationalHealthcare",
     employerName: string,
     sickLeave?: SickLeaveDetails
-    diagnosisCodes?: string[]
 }
 
 export interface HospitalEntry extends BaseEntry {
     type: "Hospital",
     discharge: DischargeDetails,
-    diagnosisCodes: string[],
 }
 
 export interface HealthCheck extends BaseEntry {
