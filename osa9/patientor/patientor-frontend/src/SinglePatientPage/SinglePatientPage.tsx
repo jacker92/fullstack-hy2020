@@ -2,11 +2,13 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Icon } from "semantic-ui-react";
-import { Patient } from "../types";
+import { setDiagnoseList, useStateValue } from "../state";
+import { Diagnose, Patient } from "../types";
 import { apiBaseUrl } from "./../constants";
 
 const SinglePatientPage: React.FC = () => {
   const [patient, setPatient] = useState<Patient>()
+  const [{ diagnoses }, dispatch] = useStateValue();
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
@@ -16,20 +18,22 @@ const SinglePatientPage: React.FC = () => {
         const { data: receivedPatient } = await axios.get<Patient>(
           `${apiBaseUrl}/patients/${id}`
         );
+        const { data: diagnoseListFromApi } = await axios.get<Diagnose[]>(
+          `${apiBaseUrl}/diagnoses`)
         setPatient(receivedPatient)
+        dispatch(setDiagnoseList(diagnoseListFromApi))
       } catch (e) {
         console.error(e);
       }
     };
     fetchPatient();
-  }, [id])
+  }, [dispatch, id])
 
   if (!patient) {
     return null;
   }
 
   const gender = patient.gender === "male" ? "mars" : patient.gender === "female" ? "venus" : "genderless";
-  console.log("Patients", patient);
   return (
     <div className="App">
       <h2>{patient.name} <Icon name={gender} /></h2>
@@ -41,7 +45,7 @@ const SinglePatientPage: React.FC = () => {
           <p>{entry.date} <em>{entry.description}</em></p>
           <ul>
             {entry.diagnosisCodes?.map(diagnosis => (
-              <li key={diagnosis}>{diagnosis}</li>
+              <li key={diagnosis}>{diagnosis} {diagnoses[diagnosis]?.name}</li>
             ))}
           </ul>
         </div>

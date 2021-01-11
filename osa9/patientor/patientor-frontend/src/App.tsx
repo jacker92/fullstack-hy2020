@@ -15,18 +15,16 @@ const App: React.FC = () => {
   React.useEffect(() => {
     axios.get<void>(`${apiBaseUrl}/ping`);
 
-    const fetchPatientList = async () => {
+    const fetchData = async () => {
       try {
         const { data: patientListFromApi } = await axios.get<Patient[]>(
-          `${apiBaseUrl}/patients`
-        );
+          `${apiBaseUrl}/patients`)
         dispatch(setPatientList(patientListFromApi));
-
       } catch (e) {
         console.error(e);
       }
     };
-    fetchPatientList();
+    fetchData();
   }, [dispatch]);
 
   return (
