@@ -5,9 +5,9 @@ import { Button, Icon } from "semantic-ui-react";
 import AddEntryModal from "../AddEntryModal";
 import { EntryFormValues } from "../AddEntryModal/AddEntryForm";
 import { addEntry, setDiagnoseList, useStateValue } from "../state";
-import { Diagnose, Entry, HealthCheckEntry, HospitalEntry, OccupationalHealthCareEntry, Patient } from "../types";
-import { assertNever } from "../utils";
+import { Diagnose, Entry, Patient } from "../types";
 import { apiBaseUrl } from "./../constants";
+import { EntryDetails } from "./EntryDetails";
 
 const SinglePatientPage: React.FC = () => {
   const [patient, setPatient] = useState<Patient>();
@@ -82,68 +82,5 @@ const SinglePatientPage: React.FC = () => {
   );
 };
 
-const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
-  switch (entry.type) {
-    case "Hospital":
-      return <Hospital entry={entry} />;
-    case "OccupationalHealthcare":
-      return <OccupationalHealthCare entry={entry} />;
-    case "HealthCheck":
-      return <HealthCheck entry={entry} />;
-    default:
-      return assertNever(entry);
-  }
-};
-
-const Hospital: React.FC<{ entry: HospitalEntry }> = ({ entry }) => {
-  const [{ diagnoses },] = useStateValue();
-  return (
-    <div>
-      <Icon name="doctor" />
-      <div key={entry.id}>
-        <p>{entry.date} <em>{entry.description}</em></p>
-        <ul>
-          {entry.diagnosisCodes?.map(diagnosis => (
-            <li key={diagnosis}>{diagnosis} {diagnoses[diagnosis]?.name}</li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-};
-
-const OccupationalHealthCare: React.FC<{ entry: OccupationalHealthCareEntry }> = ({ entry }) => {
-  const [{ diagnoses },] = useStateValue();
-  return (
-    <div>
-      <Icon name="heart outline" />
-      <div key={entry.id}>
-        <p>{entry.date} <em>{entry.description}</em></p>
-        <ul>
-          {entry.diagnosisCodes?.map(diagnosis => (
-            <li key={diagnosis}>{diagnosis} {diagnoses[diagnosis]?.name}</li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-};
-
-const HealthCheck: React.FC<{ entry: HealthCheckEntry }> = ({ entry }) => {
-  const [{ diagnoses },] = useStateValue();
-  return (
-    <div>
-      <div key={entry.id}>
-        <Icon name="heart" />
-        <p>{entry.date} <em>{entry.description}</em></p>
-        <ul>
-          {entry.diagnosisCodes?.map(diagnosis => (
-            <li key={diagnosis}>{diagnosis} {diagnoses[diagnosis]?.name}</li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-};
 
 export default SinglePatientPage;

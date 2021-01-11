@@ -1,16 +1,27 @@
 import React, { useState } from "react";
 import { useStateValue } from "../state";
 import { Field, Form, Formik } from "formik";
-import { HealthCheckEntry, HospitalEntry, OccupationalHealthCareEntry } from "../types";
 import { DiagnosisSelection, EntryOption, EntrySelectField, NumberField, TextField } from "../AddPatientModal/FormField";
 import { Button } from "semantic-ui-react";
-
-export type EntryFormValues = OccupationalHealthCareEntry | HospitalEntry | HealthCheckEntry;
+import { Diagnose, DischargeDetails, SickLeaveDetails } from "../types";
 
 interface Props {
-    onSubmit: (values: any) => void;
+    onSubmit: (values: EntryFormValues) => void;
     onCancel: () => void;
 }
+
+export type EntryFormValues = {
+    type: string;
+    date: string;
+    specialist: string;
+    description: string;
+    employerName: string;
+    diagnosisCodes: Diagnose[];
+    discharge: DischargeDetails;
+    sickLeave: SickLeaveDetails;
+    healthCheckRating: 1;
+};
+
 
 const entryOptions: EntryOption[] = [
     { value: "OccupationalHealthcare", label: "Occupational HealthCareEntry" },
@@ -95,7 +106,7 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
                             label="Entry type"
                             name="type"
                             options={entryOptions}
-                            onChange={(e) => setEntryType(e.target.value)}
+                            onChange={(e) => setEntryType(e)}
                         />
                         <DiagnosisSelection
                             setFieldValue={setFieldValue}

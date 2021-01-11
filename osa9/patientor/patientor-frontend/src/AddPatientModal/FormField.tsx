@@ -23,7 +23,7 @@ type EntrySelectFieldProps = {
   name: string;
   label: string;
   options: EntryOption[];
-  onChange: (value: any) => void;
+  onChange: (value: string) => void;
 };
 
 export const EntrySelectField: React.FC<EntrySelectFieldProps> = ({
@@ -34,7 +34,7 @@ export const EntrySelectField: React.FC<EntrySelectFieldProps> = ({
 }: EntrySelectFieldProps) => {
 
   return (
-    <Form.Field onChange={onChange}>
+    <Form.Field onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}>
       <label>{label}</label>
       <Field as="select" name={name} className="ui dropdown">
         {options.map(option => (
@@ -43,7 +43,7 @@ export const EntrySelectField: React.FC<EntrySelectFieldProps> = ({
           </option>
         ))}
       </Field>
-    </Form.Field>
+    </Form.Field >
   );
 };
 
@@ -89,9 +89,6 @@ export const TextField: React.FC<TextProps> = ({
   );
 };
 
-/*
-  for exercises 9.24.-
-*/
 interface NumberProps extends FieldProps {
   label: string;
   errorMessage?: string;
