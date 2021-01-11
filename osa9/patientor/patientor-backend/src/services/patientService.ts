@@ -1,7 +1,7 @@
-import { NewPatientEntry, Patient, PublicPatientResponse, SinglePatientResponse } from '../types';
+import { NewEntry, NewPatientEntry, Patient, PublicPatientResponse, SinglePatientResponse } from '../types';
 import pats from '../data/patients';
 import { v4 as uuidv4 } from 'uuid';
-import toNewPatientEntry from '../utils';
+import { toNewPatientEntry } from '../utils';
 
 const patients: Patient[] = pats.map(obj => {
     console.log(pats);
@@ -44,8 +44,24 @@ const findByID = (id: string): SinglePatientResponse | undefined => {
     return result;
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const addEntryForPatient = (id: string, newEntry: NewEntry): Patient => {
+    const result = patients.find(x => x.id === id);
+    if (!result) {
+        throw new Error("could not find patient");
+    }
+    result.entries.push({
+        ...newEntry,
+        id: uuidv4()
+    });
+
+    console.log("Returning result", result);
+    return result;
+};
+
 export default {
     getEntries,
     addPatient,
-    findByID
+    findByID,
+    addEntryForPatient
 };

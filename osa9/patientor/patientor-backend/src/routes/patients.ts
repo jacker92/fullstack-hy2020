@@ -1,6 +1,6 @@
 import express from 'express';
 import patientService from './../services/patientService';
-import toNewPatientEntry from './../utils';
+import { toNewPatientEntry, toNewEntry } from './../utils';
 
 const router = express.Router();
 
@@ -15,6 +15,14 @@ router.get('/:id', (req, res) => {
         res.status(404).send({ error: `Could not find user with id: ${req.params.id}` });
     }
     res.send(patient);
+});
+
+router.post('/:id/entries', (req, _res): void => {
+    const id = req.params.id;
+    console.log("In id entries", req.params.id);
+    const newEntry = toNewEntry(req.body);
+    const entry = patientService.addEntryForPatient(id, newEntry);
+    _res.send(entry);
 });
 
 router.post('/', (req, res) => {
