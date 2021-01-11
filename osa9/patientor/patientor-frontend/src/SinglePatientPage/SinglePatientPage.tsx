@@ -1,16 +1,27 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Icon } from "semantic-ui-react";
-import { setDiagnoseList, useStateValue } from "../state";
+import { Button, Icon } from "semantic-ui-react";
+import AddEntryModal from "../AddEntryModal";
+import { EntryFormValues } from "../AddEntryModal/AddEntryForm";
+import { addEntry, setDiagnoseList, useStateValue } from "../state";
 import { Diagnose, Entry, HealthCheckEntry, HospitalEntry, OccupationalHealthCareEntry, Patient } from "../types";
 import { assertNever } from "../utils";
 import { apiBaseUrl } from "./../constants";
 
 const SinglePatientPage: React.FC = () => {
-  const [patient, setPatient] = useState<Patient>()
+  const [patient, setPatient] = useState<Patient>();
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [, dispatch] = useStateValue();
   const { id } = useParams<{ id: string }>();
+  const [error, setError] = React.useState<string | undefined>();
+
+  const openModal = (): void => setModalOpen(true);
+
+  const closeModal = (): void => {
+    setModalOpen(false);
+    setError(undefined);
+  };
 
   useEffect(() => {
     axios.get<void>(`${apiBaseUrl}/ping`);
@@ -20,15 +31,29 @@ const SinglePatientPage: React.FC = () => {
           `${apiBaseUrl}/patients/${id}`
         );
         const { data: diagnoseListFromApi } = await axios.get<Diagnose[]>(
-          `${apiBaseUrl}/diagnoses`)
-        setPatient(receivedPatient)
-        dispatch(setDiagnoseList(diagnoseListFromApi))
+          `${apiBaseUrl}/diagnoses`);
+        setPatient(receivedPatient);
+        dispatch(setDiagnoseList(diagnoseListFromApi));
       } catch (e) {
         console.error(e);
       }
     };
     fetchPatient();
-  }, [dispatch, id])
+  }, [dispatch, id]);
+
+  const submitNewEntry = async (values: EntryFormValues) => {
+    try {
+      const { data: newEntry } = await axios.post<Entry>(
+        `${apiBaseUrl}/patients/${id}/entries`,
+        values
+      );
+      dispatch(addEntry(newEntry));
+      closeModal();
+    } catch (e) {
+      console.error(e.response.data);
+      setError(e.response.data.error);
+    }
+  };
 
   if (!patient) {
     return null;
@@ -44,6 +69,14 @@ const SinglePatientPage: React.FC = () => {
       {patient.entries.map(entry => (
         <EntryDetails key={entry.id} entry={entry} />
       ))}
+
+      <AddEntryModal
+        modalOpen={modalOpen}
+        onSubmit={submitNewEntry}
+        error={error}
+        onClose={closeModal}
+      />
+      <Button onClick={() => openModal()}>Add New Entry</Button>
     </div>
   );
 };
@@ -51,15 +84,15 @@ const SinglePatientPage: React.FC = () => {
 const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
   switch (entry.type) {
     case "Hospital":
-      return <Hospital entry={entry} />
+      return <Hospital entry={entry} />;
     case "OccupationalHealthcare":
-      return <OccupationalHealthCare entry={entry} />
+      return <OccupationalHealthCare entry={entry} />;
     case "HealthCheck":
-      return <HealthCheck entry={entry} />
+      return <HealthCheck entry={entry} />;
     default:
-      return assertNever(entry)
+      return assertNever(entry);
   }
-}
+};
 
 const Hospital: React.FC<{ entry: HospitalEntry }> = ({ entry }) => {
   const [{ diagnoses },] = useStateValue();
@@ -75,8 +108,8 @@ const Hospital: React.FC<{ entry: HospitalEntry }> = ({ entry }) => {
         </ul>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const OccupationalHealthCare: React.FC<{ entry: OccupationalHealthCareEntry }> = ({ entry }) => {
   const [{ diagnoses },] = useStateValue();
@@ -92,8 +125,8 @@ const OccupationalHealthCare: React.FC<{ entry: OccupationalHealthCareEntry }> =
         </ul>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const HealthCheck: React.FC<{ entry: HealthCheckEntry }> = ({ entry }) => {
   const [{ diagnoses },] = useStateValue();
@@ -109,7 +142,7 @@ const HealthCheck: React.FC<{ entry: HealthCheckEntry }> = ({ entry }) => {
         </ul>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default SinglePatientPage;
