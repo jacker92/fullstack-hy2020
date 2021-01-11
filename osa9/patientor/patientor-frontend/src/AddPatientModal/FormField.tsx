@@ -3,19 +3,16 @@ import { ErrorMessage, Field, FieldProps, FormikProps } from "formik";
 import { Dropdown, DropdownProps, Form } from "semantic-ui-react";
 import { Diagnosis, Gender } from "../types";
 
-// structure of a single option
 export type GenderOption = {
   value: Gender;
   label: string;
 };
 
-// structure of a single option
 export type EntryOption = {
   value: string;
   label: string;
 };
 
-// props for select field component
 type SelectFieldProps = {
   name: string;
   label: string;

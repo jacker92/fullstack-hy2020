@@ -39,7 +39,7 @@ const SinglePatientPage: React.FC = () => {
       }
     };
     fetchPatient();
-  }, [dispatch, id]);
+  }, [dispatch, id, modalOpen]);
 
   const submitNewEntry = async (values: EntryFormValues) => {
     console.log("Submitting, ", values);

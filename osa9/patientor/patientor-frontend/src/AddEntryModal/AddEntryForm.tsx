@@ -30,7 +30,7 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
                 description: "",
                 employerName: "",
                 diagnosisCodes: [],
-                dischargeDetails: {
+                discharge: {
                     date: "",
                     criteria: ""
                 },
@@ -58,21 +58,42 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
                 if (!values.diagnosisCodes) {
                     errors.diagnosisCodes = requiredError;
                 }
-                console.log("errors", errors);
+                if (!values.type) {
+                    errors.type = requiredError;
+                }
+
+                switch (values.type) {
+                    case "Hospital":
+                        if (!values.discharge.date || !values.discharge.criteria) {
+                            errors.discharge = requiredError;
+                        }
+                        break;
+                    case "OccupationalHealthcare":
+                        if (!values.employerName) {
+                            errors.employerName = requiredError;
+                        }
+                        if (!values.sickLeave.startDate || !values.sickLeave.startDate) {
+                            errors.sickLeave = requiredError;
+                        }
+                        break;
+                    case "HealthCheck":
+                        if (!values.healthCheckRating) {
+                            errors.healthCheckRating = requiredError;
+                        }
+                        break;
+                    default:
+                        errors.type = "Invalid type";
+                }
                 return errors;
             }}
         >
             {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
 
-                console.log("IsDirty", dirty);
-                console.log("IsValid", isValid);
-                console.log("IsValid", setFieldValue);
-                console.log("IsValid", setFieldTouched);
                 return (
                     <Form className="form ui" >
                         <EntrySelectField
                             label="Entry type"
-                            name="entrytype"
+                            name="type"
                             options={entryOptions}
                             onChange={(e) => setEntryType(e.target.value)}
                         />
@@ -130,13 +151,13 @@ const EntrySpecificForms: React.FC<{ entryType: string }> = ({ entryType }) => {
                     <Field
                         label="Discharge Date"
                         placeholder="date"
-                        name="dischargeDetails.date"
+                        name="discharge.date"
                         component={TextField}
                     />
                     <Field
                         label="Criteria"
                         placeholder="criteria"
-                        name="dischargeDetails.criteria"
+                        name="discharge.criteria"
                         component={TextField}
                     />
                 </div>
