@@ -20,7 +20,7 @@ export interface Patient {
   entries: Entry[]
 }
 
-export type Entry = OccupationalHealthCareEntry | HospitalEntry | HealthCheck;
+export type Entry = OccupationalHealthCareEntry | HospitalEntry | HealthCheckEntry;
 
 export interface BaseEntry {
   id: string,
@@ -48,7 +48,7 @@ export interface HospitalEntry extends BaseEntry {
   discharge: DischargeDetails,
 }
 
-export interface HealthCheck extends BaseEntry {
+export interface HealthCheckEntry extends BaseEntry {
   type: "HealthCheck",
   healthCheckRating: number
 }
