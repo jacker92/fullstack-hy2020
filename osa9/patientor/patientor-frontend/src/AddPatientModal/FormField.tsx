@@ -26,16 +26,18 @@ type EntrySelectFieldProps = {
   name: string;
   label: string;
   options: EntryOption[];
+  onChange: (value: any) => void;
 };
 
 export const EntrySelectField: React.FC<EntrySelectFieldProps> = ({
   name,
   label,
   options,
+  onChange
 }: EntrySelectFieldProps) => {
 
   return (
-    <Form.Field>
+    <Form.Field onChange={onChange}>
       <label>{label}</label>
       <Field as="select" name={name} className="ui dropdown">
         {options.map(option => (
@@ -77,15 +79,18 @@ export const TextField: React.FC<TextProps> = ({
   field,
   label,
   placeholder
-}) => (
-  <Form.Field>
-    <label>{label}</label>
-    <Field placeholder={placeholder} {...field} />
-    <div style={{ color: 'red' }}>
-      <ErrorMessage name={field.name} />
-    </div>
-  </Form.Field>
-);
+}) => {
+
+  return (
+    < Form.Field >
+      <label>{label}</label>
+      <Field placeholder={placeholder} {...field} />
+      <div style={{ color: 'red' }}>
+        <ErrorMessage name={field.name} />
+      </div>
+    </Form.Field >
+  );
+};
 
 /*
   for exercises 9.24.-

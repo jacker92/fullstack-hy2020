@@ -42,6 +42,7 @@ const SinglePatientPage: React.FC = () => {
   }, [dispatch, id]);
 
   const submitNewEntry = async (values: EntryFormValues) => {
+    console.log("Submitting, ", values);
     try {
       const { data: newEntry } = await axios.post<Entry>(
         `${apiBaseUrl}/patients/${id}/entries`,
